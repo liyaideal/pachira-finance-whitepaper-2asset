@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pachira Finance - 传统资产数字化白皮书</title>
+    <title>Ploutos Finance - 传统资产数字化白皮书</title>
     <style>
         :root {
-            --primary: #0F2C56;
-            --secondary: #F6F1EA;
-            --accent: #F59E0B;
+            --primary: #1B1F3B; /* 深夜蓝 */
+            --secondary: #F7F6F2; /* 奶油白 */
+            --accent: #D4AF37; /* Ploutos金 */
             --text: #333333;
             --light-text: #666666;
             --bg-light: #FFFFFF;
             --bg-dark: #F8F8F8;
-            --success: #10B981;
+            --success: #3ECDC1; /* 希望绿 */
+            --error: #D94F4F; /* 风险红 */
             --border: #E5E7EB;
         }
         
@@ -24,7 +25,7 @@
         }
         
         body {
-            font-family: 'Inter', 'Satoshi', 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: "Inter", "Helvetica Neue", "阿里巴巴普惠体", "思源宋体", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
             line-height: 1.6;
             color: var(--text);
             background-color: var(--bg-light);
@@ -33,7 +34,7 @@
         header {
             background-color: var(--primary);
             color: white;
-            padding: 2rem 0;
+            padding: 3rem 0;
         }
         
         .container {
@@ -86,12 +87,24 @@
             max-width: 800px;
         }
         
+        .slogan {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+        
         .main-content {
             padding: 3rem 0;
         }
         
         .section {
             margin-bottom: 4rem;
+        }
+        
+        .section ul {
+            padding-left: 2rem; /* 增加列表的左侧内边距 */
+            margin-bottom: 1.5rem;
         }
         
         .card {
@@ -101,6 +114,14 @@
             padding: 2rem;
             margin-bottom: 2rem;
             border: 1px solid var(--border);
+        }
+        
+        .brand-story {
+            background-color: var(--secondary);
+            border-left: 4px solid var(--accent);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
         }
         
         .challenge-container {
@@ -414,7 +435,7 @@
         }
         
         .contact-button:hover {
-            background-color: #E08A00;
+            background-color: #C09F2F;
         }
         
         footer {
@@ -431,13 +452,6 @@
             max-width: 800px;
             margin: 1rem auto 0;
         }
-
-        /* 在CSS样式部分添加或修改 */
-        .section ul {
-            padding-left: 2rem; /* 增加列表的左侧内边距 */
-            margin-bottom: 1.5rem;
-        }
-
         
         @media (max-width: 768px) {
             .container {
@@ -472,10 +486,11 @@
         <div class="container">
             <div class="header-content">
                 <svg class="logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="60" cy="60" r="55" fill="none" stroke="white" stroke-width="2"/>
-                    <path d="M60,20 C70,40 90,50 90,70 C90,90 70,100 60,100 C50,100 30,90 30,70 C30,50 50,40 60,20 Z" fill="white" opacity="0.8"/>
+                    <circle cx="60" cy="60" r="55" fill="none" stroke="#D4AF37" stroke-width="2"/>
+                    <path d="M60,20 C70,40 90,50 90,70 C90,90 70,100 60,100 C50,100 30,90 30,70 C30,50 50,40 60,20 Z" fill="#D4AF37" opacity="0.8"/>
                 </svg>
-                <h1>Pachira Finance 传统资产数字化白皮书</h1>
+                <h1>Ploutos Finance 传统资产数字化白皮书</h1>
+                <p class="slogan">Wealth has a guardian. It's called Ploutos.</p>
                 <p class="subtitle">释放优质实体资产的价值与流动性潜力，连接去中心化金融世界的创新桥梁</p>
             </div>
         </div>
@@ -486,8 +501,14 @@
             <div class="section">
                 <h2>执行摘要</h2>
                 <div class="card">
-                    <p>在当今快速发展的金融科技环境中，传统资产持有者面临着一个关键问题：如何在不失去资产控制权的情况下，最大化释放资产价值和流动性潜力。Pachira Finance平台应运而生，为高质量实体资产提供创新的数字化解决方案，帮助资产持有者在去中心化金融世界中创造新的价值增长路径。</p>
-                    <p>本白皮书专为拥有优质资产的机构和个人编写，详细阐述Pachira Finance如何通过先进的区块链技术和金融创新，为传统资产创造前所未有的价值实现机会。我们提供的不仅是技术平台，更是一套完整的资产价值提升方案。</p>
+                    <p>在当今快速发展的金融科技环境中，传统资产持有者面临着一个关键问题：如何在不失去资产控制权的情况下，最大化释放资产价值和流动性潜力。Ploutos Finance平台应运而生，为高质量实体资产提供创新的数字化解决方案，帮助资产持有者在去中心化金融世界中创造新的价值增长路径。</p>
+                    <p>本白皮书专为拥有优质资产的机构和个人编写，详细阐述Ploutos Finance如何通过先进的区块链技术和金融创新，为传统资产创造前所未有的价值实现机会。我们提供的不仅是技术平台，更是一套完整的资产价值提升方案。</p>
+                </div>
+                
+                <div class="brand-story">
+                    <h3>品牌故事</h3>
+                    <p>在古希腊神话中，Ploutos是掌管地面财富与丰收的神祇。传说中他行走于田野与城市之间，播种希望，收割繁荣。如今，随着数字资产与去中心化金融的崛起，财富的载体早已脱离了土地与金库，流转于链上协议与区块之中。</p>
+                    <p>Ploutos Finance正是这一精神的化身。我们赋予数字资产真实的价值基础，借由通证化实体资产，将稳健、透明、可验证的资产成长路径带入区块链世界。作为数字时代的财富守护者，Ploutos Finance致力于为您的优质资产创造更多价值可能。</p>
                 </div>
             </div>
             
@@ -522,11 +543,11 @@
             </div>
             
             <div class="section">
-                <h2>Pachira Finance解决方案</h2>
+                <h2>Ploutos Finance解决方案</h2>
                 <div class="solution-container">
                     <div class="solution-card">
                         <h3>资产通证化：资产价值的数字化表达</h3>
-                        <p>Pachira Finance提供专业的资产通证化引擎，将您的高质量实体资产转化为区块链上的数字凭证。这一过程：</p>
+                        <p>Ploutos Finance提供专业的资产通证化引擎，将您的高质量实体资产转化为区块链上的数字凭证。这一过程：</p>
                         <ul>
                             <li><strong>保留您的资产控制权</strong>：通证化不改变底层资产的所有权和控制权</li>
                             <li><strong>提高资产透明度</strong>：通过区块链技术实现资产状态和表现的实时透明</li>
@@ -537,7 +558,7 @@
                     
                     <div class="solution-card">
                         <h3>流动性增强：资产价值的灵活释放</h3>
-                        <p>通过Pachira平台，您可以：</p>
+                        <p>通过Ploutos平台，您可以：</p>
                         <ul>
                             <li><strong>分割大额资产所有权</strong>：将大型不可分割资产转变为可分割单位，降低单个投资者的参与门槛</li>
                             <li><strong>创建资产支持的借贷</strong>：使用通证化资产作为抵押获取资金，而无需出售资产</li>
@@ -548,7 +569,7 @@
                     
                     <div class="solution-card">
                         <h3>金融创新：资产价值的倍增路径</h3>
-                        <p>Pachira Finance提供多种金融创新功能，帮助您进一步释放资产潜力：</p>
+                        <p>Ploutos Finance提供多种金融创新功能，帮助您进一步释放资产潜力：</p>
                         <ul>
                             <li><strong>智能收益分配</strong>：自动、透明、准确地将资产产生的收益分配给投资者</li>
                             <li><strong>动态定价模型</strong>：根据资产表现和市场状况，实现更精准的资产定价</li>
@@ -583,7 +604,7 @@
             
             <div class="section">
                 <h2>适合通证化的资产类型</h2>
-                <p>Pachira Finance平台专为以下类型的高质量实体资产设计：</p>
+                <p>Ploutos Finance平台专为以下类型的高质量实体资产设计：</p>
                 <div class="asset-types">
                     <div class="asset-card">
                         <h3>商业地产</h3>
@@ -643,7 +664,7 @@
                         <div class="step-number">1</div>
                         <div class="step-content">
                             <h3>资产评估与尽职调查</h3>
-                            <p>在开始通证化流程前，Pachira Finance团队会协助进行全面评估：</p>
+                            <p>在开始通证化流程前，Ploutos Finance团队会协助进行全面评估：</p>
                             <ul>
                                 <li><strong>法律状态验证</strong>：确认资产所有权清晰、无法律纠纷</li>
                                 <li><strong>财务表现分析</strong>：评估历史收益和未来预期</li>
@@ -671,7 +692,7 @@
                         <div class="step-number">3</div>
                         <div class="step-content">
                             <h3>技术实现与上线</h3>
-                            <p>Pachira团队负责所有技术方面的实施：</p>
+                            <p>Ploutos团队负责所有技术方面的实施：</p>
                             <ul>
                                 <li><strong>智能合约开发</strong>：编写和审计智能合约代码</li>
                                 <li><strong>通证发行</strong>：在选定的区块链网络上创建和分发通证</li>
@@ -713,7 +734,7 @@
             
             <div class="section">
                 <h2>商业模式与费用结构</h2>
-                <p>Pachira Finance采用公平透明的费用模式，确保利益一致性：</p>
+                <p>Ploutos Finance采用公平透明的费用模式，确保利益一致性：</p>
                 
                 <h3>主要费用项目</h3>
                 <div class="fee-structure">
@@ -751,7 +772,7 @@
                 </div>
                 
                 <h3>费用优势</h3>
-                <p>与传统金融中介相比，Pachira平台具有显著的成本优势：</p>
+                <p>与传统金融中介相比，Ploutos平台具有显著的成本优势：</p>
                 <ul>
                     <li><strong>中介层次减少</strong>：直接连接资产和投资者，减少中间环节</li>
                     <li><strong>自动化流程</strong>：智能合约执行降低人工成本</li>
@@ -762,7 +783,7 @@
             
             <div class="section">
                 <h2>资产通证化的应用场景与价值</h2>
-                <p>作为创新平台，Pachira Finance正在寻找首批高质量资产合作伙伴。以下是几个资产通证化的潜在应用场景，展示了我们平台可以为不同类型资产创造的价值。</p>
+                <p>作为创新平台，Ploutos Finance正在寻找首批高质量资产合作伙伴。以下是几个资产通证化的潜在应用场景，展示了我们平台可以为不同类型资产创造的价值。</p>
                 
                 <div class="application-scenarios">
                     <div class="scenario-card">
@@ -847,7 +868,7 @@
             
             <div class="section">
                 <h2>成为首批合作伙伴的独特优势</h2>
-                <p>Pachira Finance正在寻找首批通证化项目合作伙伴。作为早期采用者，您将获得显著优势：</p>
+                <p>Ploutos Finance正在寻找首批通证化项目合作伙伴。作为早期采用者，您将获得显著优势：</p>
                 
                 <div class="advantages">
                     <div class="advantage-card">
@@ -883,7 +904,7 @@
             </div>
             
             <div class="section">
-                <h2>加入Pachira平台的流程</h2>
+                <h2>加入Ploutos平台的流程</h2>
                 <div class="join-process">
                     <ol class="process-list">
                         <li class="process-item">
@@ -936,9 +957,9 @@
                 <div class="contact-info">
                     <h3>联系我们</h3>
                     <p>如果您拥有优质资产并希望探索通证化的可能性，请通过以下方式与我们联系：</p>
-                    <p><strong>邮箱</strong>：assets@pachirafinance.com</p>
-                    <p><strong>电话</strong>：+852 5148 7546</p>
-                    <a href="http://www.pachirafinance.com/consultation" class="contact-button">预约咨询</a>
+                    <p><strong>邮箱</strong>：assets@ploutos.finance</p>
+                    <p><strong>电话</strong>：+86 XXX XXXX XXXX</p>
+                    <a href="http://www.ploutos.finance/consultation" class="contact-button">预约咨询</a>
                 </div>
             </div>
         </div>
@@ -947,11 +968,11 @@
     <footer>
         <div class="container">
             <svg class="logo" width="80" height="80" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="60" cy="60" r="55" fill="none" stroke="white" stroke-width="2"/>
-                <path d="M60,20 C70,40 90,50 90,70 C90,90 70,100 60,100 C50,100 30,90 30,70 C30,50 50,40 60,20 Z" fill="white" opacity="0.8"/>
+                <circle cx="60" cy="60" r="55" fill="none" stroke="#D4AF37" stroke-width="2"/>
+                <path d="M60,20 C70,40 90,50 90,70 C90,90 70,100 60,100 C50,100 30,90 30,70 C30,50 50,40 60,20 Z" fill="#D4AF37" opacity="0.8"/>
             </svg>
-            <p>© 2025 Pachira Finance. 连接实体资产与去中心化金融的创新桥梁。</p>
-            <p class="disclaimer">免责声明：本白皮书仅供信息参考之用，不构成投资建议、证券发行或任何形式的投资邀约。每个资产通证化项目都有其特定风险和回报特征，潜在合作方应自行进行尽职调查并咨询专业顾问。Pachira Finance将持续遵守相关司法管辖区的法律法规，并可能根据监管要求调整业务模式。</p>
+            <p>© 2025 Ploutos Finance. 连接实体资产与去中心化金融的创新桥梁。</p>
+            <p class="disclaimer">免责声明：本白皮书仅供信息参考之用，不构成投资建议、证券发行或任何形式的投资邀约。每个资产通证化项目都有其特定风险和回报特征，潜在合作方应自行进行尽职调查并咨询专业顾问。Ploutos Finance将持续遵守相关司法管辖区的法律法规，并可能根据监管要求调整业务模式。</p>
         </div>
     </footer>
 </body>
