@@ -136,12 +136,8 @@
             align-items: center;
             margin-bottom: 20px;
         }
-        
+
         .logo {
-            width: 80px;
-            height: 80px;
-            background-color: var(--primary-color);
-            border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -159,6 +155,11 @@
             max-width: 100%;
             height: auto;
             display: block;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Alibaba PuHuiTi', var(--cn-sans-fonts);
+            font-weight: 700;
         }
 
         
@@ -1079,10 +1080,9 @@
 <body>
 <body>
     <header>
-        <div class="container">
-            <div class="header-content">
-                <!-- 头部Logo -->
-                <img src="images/无背景品牌logo.png" alt="Ploutos Finance Logo" class="logo">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="images/无背景品牌logo.png" alt="Ploutos Finance Logo" style="width: auto; height: 60px;">
                 </div>
             </div>
             <h1>Ploutos Finance 天使投资人白皮书</h1>
@@ -1482,46 +1482,47 @@
                 </div>
 
                 <div class="view-content" data-view="chart">
-                    <div style="width: 100%; height: 300px; position: relative;">
-                        <!-- 简化的图表展示 -->
-                        <div style="position: absolute; left: 40px; right: 20px; top: 20px; bottom: 40px;">
-                            <!-- 纵轴标签 -->
-                            <div style="position: absolute; left: -30px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end;">
-                                <div>60%</div>
-                                <div>40%</div>
-                                <div>20%</div>
-                                <div>0%</div>
-                            </div>
+                <div style="width: 100%; height: 300px; position: relative;">
+                    <!-- 简化的图表展示 -->
+                    <div style="position: absolute; left: 40px; right: 20px; top: 20px; bottom: 40px;">
+                        <!-- 纵轴标签 -->
+                        <div style="position: absolute; left: -30px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end;">
+                            <div>60%</div>
+                            <div>40%</div>
+                            <div>20%</div>
+                            <div>0%</div>
+                        </div>
+                        
+                        <!-- 横轴标签 -->
+                        <div style="position: absolute; left: 0; right: 0; bottom: -30px; display: flex; justify-content: space-between;">
+                            <div>1年</div>
+                            <div>5年</div>
+                            <div>10年</div>
+                            <div>20年</div>
+                        </div>
+                        
+                        <!-- 网格线 -->
+                        <div style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; border-left: 1px solid #ddd; border-bottom: 1px solid #ddd;">
+                            <div style="position: absolute; left: 0; right: 0; top: 25%; height: 1px; background-color: #eee;"></div>
+                            <div style="position: absolute; left: 0; right: 0; top: 50%; height: 1px; background-color: #eee;"></div>
+                            <div style="position: absolute; left: 0; right: 0; top: 75%; height: 1px; background-color: #eee;"></div>
                             
-                            <!-- 横轴标签 -->
-                            <div style="position: absolute; left: 0; right: 0; bottom: -30px; display: flex; justify-content: space-between;">
-                                <div>1年</div>
-                                <div>5年</div>
-                                <div>10年</div>
-                                <div>20年</div>
-                            </div>
-                            
-                            <!-- 网格线 -->
-                            <div style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; border-left: 1px solid #ddd; border-bottom: 1px solid #ddd;">
-                                <div style="position: absolute; left: 0; right: 0; top: 25%; height: 1px; background-color: #eee;"></div>
-                                <div style="position: absolute; left: 0; right: 0; top: 50%; height: 1px; background-color: #eee;"></div>
-                                <div style="position: absolute; left: 0; right: 0; top: 75%; height: 1px; background-color: #eee;"></div>
-                                
-                                <div style="position: absolute; left: 33%; top: 0; bottom: 0; width: 1px; background-color: #eee;"></div>
-                                <div style="position: absolute; left: 66%; top: 0; bottom: 0; width: 1px; background-color: #eee;"></div>
-                            </div>
-                            
-                            <!-- 数据线 - 累计回报率 -->
-                            <svg width="100%" height="100%" style="position: absolute; left: 0; top: 0;">
-                                <path d="M0,100 L33,75 L66,50 L100,0" stroke="#D4AF37" stroke-width="3" fill="none" />
-                                <circle cx="0" cy="100" r="4" fill="#D4AF37" />
-                                <circle cx="33" cy="75" r="4" fill="#D4AF37" />
-                                <circle cx="66" cy="50" r="4" fill="#D4AF37" />
-                                <circle cx="100" cy="0" r="4" fill="#D4AF37" />
-                            </svg>
-                            
-                            <!-- 图例 -->
-                            <div style="position: absolute; right: 0; top: -20px; display: flex; align-items: center;">
+                            <div style="position: absolute; left: 33%; top: 0; bottom: 0; width: 1px; background-color: #eee;"></div>
+                            <div style="position: absolute; left: 66%; top: 0; bottom: 0; width: 1px; background-color: #eee;"></div>
+                        </div>
+                        
+                        <!-- 数据线 - 累计回报率 -->
+                        <svg width="100%" height="100%" style="position: absolute; left: 0; top: 0;">
+                            <path d="M0,100 L33,75 L66,50 L100,0" stroke="#D4AF37" stroke-width="3" fill="none" />
+                            <circle cx="0" cy="100" r="4" fill="#D4AF37" />
+                            <circle cx="33" cy="75" r="4" fill="#D4AF37" />
+                            <circle cx="66" cy="50" r="4" fill="#D4AF37" />
+                            <circle cx="100" cy="0" r="4" fill="#D4AF37" />
+                        </svg>
+                        
+                        <!-- 图例 -->
+                        <div style="position: absolute; right: 0; top: -20px; display: flex; align-items: center;">
+                            <div style="display: flex; align-items: center;">
                                 <div style="width: 12px; height: 12px; background-color: #D4AF37; margin-right: 5px;"></div>
                                 <div style="font-size: 12px;">累计回报率</div>
                             </div>
@@ -1529,7 +1530,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <h3>客户获取策略与成本分析</h3>
             
             <div class="stat-cards">
@@ -2089,7 +2090,7 @@
                 </tbody>
             </table>
         </div>
-        
+
         <div class="view-content" data-view="chart-view">
             <div style="width: 100%; height: 400px; position: relative;">
                 <!-- 简化的图表展示 -->
@@ -2127,22 +2128,22 @@
                     
                     <!-- 数据线 - 总收入 -->
                     <svg width="100%" height="100%" style="position: absolute; left: 0; top: 0;">
-                        <path d="M0,98 L25,94 L50,78 L75,50 L100,10" stroke="#D4AF37" stroke-width="3" fill="none" />
-                        <circle cx="0" cy="98" r="4" fill="#D4AF37" />
-                        <circle cx="25" cy="94" r="4" fill="#D4AF37" />
-                        <circle cx="50" cy="78" r="4" fill="#D4AF37" />
-                        <circle cx="75" cy="50" r="4" fill="#D4AF37" />
-                        <circle cx="100" cy="10" r="4" fill="#D4AF37" />
+                        <path d="M12,98 L37,94 L62,78 L87,50 L112,10" stroke="#D4AF37" stroke-width="3" fill="none" />
+                        <circle cx="12" cy="98" r="4" fill="#D4AF37" />
+                        <circle cx="37" cy="94" r="4" fill="#D4AF37" />
+                        <circle cx="62" cy="78" r="4" fill="#D4AF37" />
+                        <circle cx="87" cy="50" r="4" fill="#D4AF37" />
+                        <circle cx="112" cy="10" r="4" fill="#D4AF37" />
                     </svg>
                     
                     <!-- 数据线 - 净利润 -->
                     <svg width="100%" height="100%" style="position: absolute; left: 0; top: 0;">
-                        <path d="M0,100 L25,100 L50,90 L75,75 L100,50" stroke="#3ECDC1" stroke-width="3" fill="none" />
-                        <circle cx="0" cy="100" r="4" fill="#3ECDC1" />
-                        <circle cx="25" cy="100" r="4" fill="#3ECDC1" />
-                        <circle cx="50" cy="90" r="4" fill="#3ECDC1" />
-                        <circle cx="75" cy="75" r="4" fill="#3ECDC1" />
-                        <circle cx="100" cy="50" r="4" fill="#3ECDC1" />
+                        <path d="M12,100 L37,99 L62,90 L87,75 L112,50" stroke="#3ECDC1" stroke-width="3" fill="none" />
+                        <circle cx="12" cy="100" r="4" fill="#3ECDC1" />
+                        <circle cx="37" cy="99" r="4" fill="#3ECDC1" />
+                        <circle cx="62" cy="90" r="4" fill="#3ECDC1" />
+                        <circle cx="87" cy="75" r="4" fill="#3ECDC1" />
+                        <circle cx="112" cy="50" r="4" fill="#3ECDC1" />
                     </svg>
                     
                     <!-- 图例 -->
@@ -2159,7 +2160,6 @@
                 </div>
             </div>
         </div>
-    </div>
     
     <h3>融资资金使用计划</h3>
     
@@ -2167,18 +2167,18 @@
         <div style="flex: 0 0 48%; min-width: 300px; margin-bottom: 20px;">
             <div style="height: 300px; background: white; border-radius: 8px; position: relative; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
                 <h4 style="margin-top: 0; text-align: center; margin-bottom: 20px;">天使轮融资（200万美元）</h4>
-                
+
                 <!-- 简化的饼图 -->
                 <svg width="160" height="160" viewBox="0 0 160 160" style="position: absolute; left: 20px; top: 60px;">
                     <circle cx="80" cy="80" r="80" fill="#f2f2f2" />
-                    <!-- 40% -->
+                    <!-- 40% 技术开发 -->
                     <path d="M80,80 L80,0 A80,80 0 0,1 153.1,106.9 L80,80" fill="#D4AF37" />
-                    <!-- 30% -->
-                    <path d="M80,80 L153.1,106.9 A80,80 0 0,1 80,160 L80,80" fill="#3ECDC1" />
-                    <!-- 20% -->
-                    <path d="M80,80 L80,160 A80,80 0 0,1 17.1,131.1 L80,80" fill="#1B1F3B" />
-                    <!-- 10% -->
-                    <path d="M80,80 L17.1,131.1 A80,80 0 0,1 6.9,53.1 L80,80" fill="#818597" />
+                    <!-- 30% 业务拓展 -->
+                    <path d="M80,80 L153.1,106.9 A80,80 0 0,1 36.9,153.1 L80,80" fill="#3ECDC1" />
+                    <!-- 20% 运营与市场 -->
+                    <path d="M80,80 L36.9,153.1 A80,80 0 0,1 6.9,53.1 L80,80" fill="#1B1F3B" />
+                    <!-- 10% 法律合规 -->
+                    <path d="M80,80 L6.9,53.1 A80,80 0 0,1 80,0 L80,80" fill="#818597" />
                 </svg>
                 
                 <!-- 图例 -->
@@ -2202,14 +2202,14 @@
                 </div>
             </div>
         </div>
-        
+
         <div style="flex: 0 0 48%; min-width: 300px; margin-bottom: 20px;">
-            <div style="height: 300px; background: white; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="height: auto; min-height: 300px; background: white; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
                 <h4 style="margin-top: 0; text-align: center; margin-bottom: 20px;">资金使用明细</h4>
                 
                 <div style="margin-bottom: 15px;">
-                    <div style="font-weight: 600; margin-bottom: 5px;">技术开发 ($800,000)</div>
-                    <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
+                    <div style="font-weight: 600; margin-bottom: 5px; color: var(--secondary-color);">技术开发 ($800,000)</div>
+                    <ul style="margin: 0 0 10px 0; padding-left: 20px; font-size: 14px;">
                         <li>核心技术团队扩充（5名工程师）: $400,000</li>
                         <li>产品开发与测试: $300,000</li>
                         <li>安全审计: $100,000</li>
@@ -2217,8 +2217,8 @@
                 </div>
                 
                 <div style="margin-bottom: 15px;">
-                    <div style="font-weight: 600; margin-bottom: 5px;">业务拓展 ($600,000)</div>
-                    <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
+                    <div style="font-weight: 600; margin-bottom: 5px; color: var(--secondary-color);">业务拓展 ($600,000)</div>
+                    <ul style="margin: 0 0 10px 0; padding-left: 20px; font-size: 14px;">
                         <li>BD团队组建（3名专员）: $250,000</li>
                         <li>首批资产获取成本: $250,000</li>
                         <li>合作伙伴关系建设: $100,000</li>
@@ -2226,16 +2226,16 @@
                 </div>
                 
                 <div style="margin-bottom: 15px;">
-                    <div style="font-weight: 600; margin-bottom: 5px;">运营与市场 ($400,000)</div>
-                    <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
+                    <div style="font-weight: 600; margin-bottom: 5px; color: var(--secondary-color);">运营与市场 ($400,000)</div>
+                    <ul style="margin: 0 0 10px 0; padding-left: 20px; font-size: 14px;">
                         <li>品牌建设: $150,000</li>
                         <li>初始用户获取: $150,000</li>
                         <li>运营团队组建: $100,000</li>
                     </ul>
                 </div>
                 
-                <div style="margin-bottom: 15px;">
-                    <div style="font-weight: 600; margin-bottom: 5px;">法律合规 ($200,000)</div>
+                <div style="margin-bottom: 5px;">
+                    <div style="font-weight: 600; margin-bottom: 5px; color: var(--secondary-color);">法律合规 ($200,000)</div>
                     <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
                         <li>跨境合规框架构建: $100,000</li>
                         <li>法律咨询费用: $100,000</li>
@@ -2244,16 +2244,16 @@
             </div>
         </div>
     </div>
-    
+
     <h3>财务敏感性分析</h3>
-    
+
     <div class="highlight">
-        <h4>关键敏感因素:</h4>
+        <h4>关键敏感因素分析:</h4>
         <ul>
-            <li>管理资产增长率</li>
-            <li>通证化费率</li>
-            <li>客户获取成本</li>
-            <li>借贷业务渗透率</li>
+            <li><strong>管理资产增长率:</strong> 基础情景假设年复合增长率(CAGR)为58%。每10%的增长率变化将导致5年IRR变动约±3.5%，5年管理资产规模变动±0.8亿美元。</li>
+            <li><strong>通证化费率:</strong> 基础情景假设平均费率为1.2%。每0.2%的费率调整将导致年收入变动约9%，IRR变动约±2%。</li>
+            <li><strong>客户获取成本:</strong> 基础情景假设机构客户CAC为$12,000。每20%的成本变化将导致营销费用变动约$480,000，影响盈亏平衡时间±3个月。</li>
+            <li><strong>借贷业务渗透率:</strong> 基础情景假设渗透率达到管理资产的25%。每5%的渗透率变化将导致5年收入变动约±7%，IRR变动约±1.8%。</li>
         </ul>
     </div>
     
@@ -2557,9 +2557,9 @@
     <h3>投资回报对比</h3>
     <div class="chart-container">
         <div class="chart-title">Ploutos Finance与其他投资类别回报对比</div>
-        <div style="display: flex; height: 300px; margin-top: 30px; position: relative;">
+        <div style="width: 100%; height: 300px; margin-top: 30px; position: relative;">
             <!-- Y轴标签 -->
-            <div style="position: absolute; left: -30px; top: 0; bottom: 30px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end;">
+            <div style="position: absolute; left: 10px; top: 10px; bottom: 40px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; color: var(--light-gray);">
                 <div>50%</div>
                 <div>40%</div>
                 <div>30%</div>
@@ -2568,47 +2568,43 @@
                 <div>0%</div>
             </div>
             
-            <!-- X轴标签 -->
-            <div style="position: absolute; left: 60px; right: 0; bottom: 0; display: flex;">
-                <div style="flex: 1; text-align: center;">Ploutos<br/>Finance</div>
-                <div style="flex: 1; text-align: center;">私募<br/>股权</div>
-                <div style="flex: 1; text-align: center;">风险<br/>投资</div>
-                <div style="flex: 1; text-align: center;">股票<br/>市场</div>
-                <div style="flex: 1; text-align: center;">房地产<br/>投资</div>
-                <div style="flex: 1; text-align: center;">固定<br/>收益</div>
-            </div>
-            
             <!-- 柱状图 -->
-            <div style="margin-left: 60px; flex: 1; display: flex; align-items: flex-end;">
+            <div style="position: absolute; left: 60px; right: 20px; top: 10px; bottom: 40px; display: flex; align-items: flex-end;">
                 <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-                    <div style="width: 60%; height: 80%; background-color: var(--primary-color); position: relative;">
+                    <div style="height: 80%; width: 60px; background-color: var(--primary-color); position: relative;">
                         <div style="position: absolute; top: -25px; width: 100%; text-align: center; font-weight: bold;">40%</div>
                     </div>
+                    <div style="margin-top: 10px; text-align: center; width: 100%;">Ploutos<br/>Finance</div>
                 </div>
                 <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-                    <div style="width: 60%; height: 20%; background-color: var(--light-gray); position: relative;">
+                    <div style="height: 20%; width: 60px; background-color: var(--light-gray); position: relative;">
                         <div style="position: absolute; top: -25px; width: 100%; text-align: center; font-weight: bold;">10%</div>
                     </div>
+                    <div style="margin-top: 10px; text-align: center; width: 100%;">私募<br/>股权</div>
                 </div>
                 <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-                    <div style="width: 60%; height: 40%; background-color: var(--light-gray); position: relative;">
+                    <div style="height: 40%; width: 60px; background-color: var(--light-gray); position: relative;">
                         <div style="position: absolute; top: -25px; width: 100%; text-align: center; font-weight: bold;">20%</div>
                     </div>
+                    <div style="margin-top: 10px; text-align: center; width: 100%;">风险<br/>投资</div>
                 </div>
                 <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-                    <div style="width: 60%; height: 18%; background-color: var(--light-gray); position: relative;">
+                    <div style="height: 18%; width: 60px; background-color: var(--light-gray); position: relative;">
                         <div style="position: absolute; top: -25px; width: 100%; text-align: center; font-weight: bold;">9%</div>
                     </div>
+                    <div style="margin-top: 10px; text-align: center; width: 100%;">股票<br/>市场</div>
                 </div>
                 <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-                    <div style="width: 60%; height: 14%; background-color: var(--light-gray); position: relative;">
+                    <div style="height: 14%; width: 60px; background-color: var(--light-gray); position: relative;">
                         <div style="position: absolute; top: -25px; width: 100%; text-align: center; font-weight: bold;">7%</div>
                     </div>
+                    <div style="margin-top: 10px; text-align: center; width: 100%;">房地产<br/>投资</div>
                 </div>
                 <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-                    <div style="width: 60%; height: 8%; background-color: var(--light-gray); position: relative;">
+                    <div style="height: 8%; width: 60px; background-color: var(--light-gray); position: relative;">
                         <div style="position: absolute; top: -25px; width: 100%; text-align: center; font-weight: bold;">4%</div>
                     </div>
+                    <div style="margin-top: 10px; text-align: center; width: 100%;">固定<br/>收益</div>
                 </div>
             </div>
         </div>
