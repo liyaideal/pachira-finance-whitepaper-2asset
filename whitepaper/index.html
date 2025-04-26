@@ -73,6 +73,24 @@
             font-style: normal;
             font-display: swap;
         }
+
+        @media (min-width: 769px) {
+            .timeline-item:nth-child(odd) {
+                left: 0;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 50%;
+            }
+            
+            .timeline-item:nth-child(odd)::after {
+                right: -10px;
+            }
+            
+            .timeline-item:nth-child(even)::after {
+                left: -10px;
+            }
+        }
         
         :root {
             --primary-color: #D4AF37;
@@ -1121,10 +1139,16 @@
                 5X-8X <span class="label">5年投资回报倍数</span>
             </div>
             
-            <!-- 视频介绍 -->
+            <!-- 
+            视频介绍 - 暂未上线
             <div class="video-container">
                 <div class="video-placeholder"></div>
                 <div class="video-title">Ploutos Finance: 2分钟了解实体资产通证化投资机会</div>
+            </div>
+            -->
+            <div style="background-color: var(--primary-light); border-radius: 8px; padding: 20px; margin: 30px 0; text-align: center;">
+                <h4 style="margin-top: 0; color: var(--secondary-color);">宣传视频即将上线</h4>
+                <p>我们正在制作"Ploutos Finance: 2分钟了解实体资产通证化投资机会"的视频介绍，敬请期待！</p>
             </div>
 
             <div class="highlight">
@@ -1481,7 +1505,11 @@
                     </table>
                 </div>
 
+                <!-- 
                 <div class="view-content" data-view="chart">
+                    图表内容注释
+                </div>
+                -->
                 <div style="width: 100%; height: 300px; position: relative;">
                     <!-- 简化的图表展示 -->
                     <div style="position: absolute; left: 40px; right: 20px; top: 20px; bottom: 40px;">
@@ -1529,6 +1557,7 @@
                         </div>
                     </div>
                 </div>
+             
             </div>
 
             <h3>客户获取策略与成本分析</h3>
@@ -1653,12 +1682,18 @@
             </div>
         </div>
     </div>
-    
-    <!-- 功能演示视频 -->
+
+    <!-- 
+    功能演示视频 - 暂未上线
     <h3>产品演示</h3>
     <div class="video-container">
         <div class="video-placeholder"></div>
         <div class="video-title">Ploutos资产通证化平台功能演示</div>
+    </div>
+    -->
+    <div style="background-color: var(--secondary-light); border-radius: 8px; padding: 20px; margin: 30px 0; text-align: center;">
+        <h4 style="margin-top: 0; color: var(--secondary-color);">产品演示即将上线</h4>
+        <p>我们正在开发Ploutos资产通证化平台的功能演示，完成后将在此处展示。</p>
     </div>
     
     <!-- 技术亮点 -->
@@ -1827,158 +1862,24 @@
 <section id="team">
     <h2>团队与顾问</h2>
     
-    <h3>创始团队背景与成就</h3>
-    
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin: 30px 0;">
-        <!-- 创始人1 -->
-        <div style="flex: 0 0 30%; min-width: 250px; margin-bottom: 30px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-            <div style="height: 200px; background-color: var(--secondary-light); display: flex; justify-content: center; align-items: center;">
-                <div style="width: 120px; height: 120px; border-radius: 50%; background-color: var(--secondary-color); display: flex; justify-content: center; align-items: center; color: white; font-size: 40px;">李</div>
-            </div>
-            <div style="padding: 20px;">
-                <h4 style="font-size: 18px; margin-bottom: 5px;">李明（CEO & 联合创始人）</h4>
-                <div style="height: 3px; width: 50px; background-color: var(--primary-color); margin-bottom: 15px;"></div>
-                <ul style="list-style-type: none; padding-left: 0; font-size: 14px;">
-                    <li>✦ 10年投资银行和资产管理经验</li>
-                    <li>✦ 高盛资产管理部门副总裁，管理10亿美元另类投资组合</li>
-                    <li>✦ 成功主导20亿美元资产交易，平均IRR达18%</li>
-                    <li>✦ 曾创立金融科技创业公司并成功退出（3倍投资回报）</li>
-                    <li>✦ 哈佛商学院MBA，清华大学金融学学士</li>
-                </ul>
-            </div>
-        </div>
-        
-        <!-- 创始人2 -->
-        <div style="flex: 0 0 30%; min-width: 250px; margin-bottom: 30px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-            <div style="height: 200px; background-color: var(--secondary-light); display: flex; justify-content: center; align-items: center;">
-                <div style="width: 120px; height: 120px; border-radius: 50%; background-color: var(--secondary-color); display: flex; justify-content: center; align-items: center; color: white; font-size: 40px;">张</div>
-            </div>
-            <div style="padding: 20px;">
-                <h4 style="font-size: 18px; margin-bottom: 5px;">张伟（CTO & 联合创始人）</h4>
-                <div style="height: 3px; width: 50px; background-color: var(--primary-color); margin-bottom: 15px;"></div>
-                <ul style="list-style-type: none; padding-left: 0; font-size: 14px;">
-                    <li>✦ 区块链架构专家，8年开发经验</li>
-                    <li>✦ 某知名公链前技术负责人，带领团队优化跨链协议并提升TPS 300%</li>
-                    <li>✦ 主导开发月活超100万的DeFi产品</li>
-                    <li>✦ 参与ERC-7048标准的提案与研发</li>
-                    <li>✦ 斯坦福大学计算机科学博士</li>
-                </ul>
-            </div>
-        </div>
-        
-        <!-- 创始人3 -->
-        <div style="flex: 0 0 30%; min-width: 250px; margin-bottom: 30px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-            <div style="height: 200px; background-color: var(--secondary-light); display: flex; justify-content: center; align-items: center;">
-                <div style="width: 120px; height: 120px; border-radius: 50%; background-color: var(--secondary-color); display: flex; justify-content: center; align-items: center; color: white; font-size: 40px;">王</div>
-            </div>
-            <div style="padding: 20px;">
-                <h4 style="font-size: 18px; margin-bottom: 5px;">王佳（COO & 联合创始人）</h4>
-                <div style="height: 3px; width: 50px; background-color: var(--primary-color); margin-bottom: 15px;"></div>
-                <ul style="list-style-type: none; padding-left: 0; font-size: 14px;">
-                    <li>✦ 资产通证化和合规专家</li>
-                    <li>✦ 前新加坡某领先金融科技公司运营总监，实现用户增长300%</li>
-                    <li>✦ 成功搭建跨境资产服务平台，服务50+机构客户</li>
-                    <li>✦ 曾在摩根士丹利负责结构化金融产品设计</li>
-                    <li>✦ 宾夕法尼亚大学法学博士，北京大学经济学学士</li>
-                </ul>
-            </div>
-        </div>
+    <div style="background-color: var(--primary-light); border-radius: 8px; padding: 30px; text-align: center; margin: 30px 0;">
+        <h3 style="margin-top: 0; color: var(--secondary-color);">团队信息即将公布</h3>
+        <p>我们正在确认核心团队成员和战略合作伙伴关系，相关信息将在确认后发布。</p>
+        <p>如果您对Ploutos Finance团队有任何疑问，请直接联系我们获取最新信息。</p>
     </div>
+    
+    <!-- 
+    以下内容被注释 - 待确认后上线
+    <h3>创始团队背景与成就</h3>
+    ... (团队内容)
     
     <h3>核心顾问资源</h3>
-    
-    <div style="display: flex; flex-wrap: wrap; margin: 30px 0;">
-        <!-- 顾问1 -->
-        <div style="flex: 0 0 50%; min-width: 300px; padding-right: 20px; margin-bottom: 20px;">
-            <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                <div style="width: 60px; height: 60px; border-radius: 50%; background-color: var(--primary-light); margin-right: 15px; display: flex; justify-content: center; align-items: center; font-weight: bold; color: var(--primary-color);">DJ</div>
-                <div>
-                    <h4 style="margin: 0; font-size: 18px;">David Johnson</h4>
-                    <p style="margin: 0; color: var(--light-gray);">投资人顾问</p>
-                </div>
-            </div>
-            <ul style="list-style-type: none; padding-left: 75px; font-size: 14px; color: var(--text-color);">
-                <li>✦ Paradigm资深合伙人，投资过3个独角兽金融科技公司</li>
-                <li>✦ 前高盛全球市场部董事总经理</li>
-                <li>✦ 哈佛商学院金融学客座教授</li>
-            </ul>
-        </div>
-        
-        <!-- 顾问2 -->
-        <div style="flex: 0 0 50%; min-width: 300px; padding-right: 20px; margin-bottom: 20px;">
-            <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                <div style="width: 60px; height: 60px; border-radius: 50%; background-color: var(--primary-light); margin-right: 15px; display: flex; justify-content: center; align-items: center; font-weight: bold; color: var(--primary-color);">SC</div>
-                <div>
-                    <h4 style="margin: 0; font-size: 18px;">Sarah Chen</h4>
-                    <p style="margin: 0; color: var(--light-gray);">法律顾问</p>
-                </div>
-            </div>
-            <ul style="list-style-type: none; padding-left: 75px; font-size: 14px; color: var(--text-color);">
-                <li>✦ 资深区块链法律专家，曾参与制定新加坡数字资产监管框架</li>
-                <li>✦ Linklaters律所合伙人，专注金融科技和数字资产</li>
-                <li>✦ 牛津大学法学博士</li>
-            </ul>
-        </div>
-        
-        <!-- 顾问3 -->
-        <div style="flex: 0 0 50%; min-width: 300px; padding-right: 20px; margin-bottom: 20px;">
-            <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                <div style="width: 60px; height: 60px; border-radius: 50%; background-color: var(--primary-light); margin-right: 15px; display: flex; justify-content: center; align-items: center; font-weight: bold; color: var(--primary-color);">MW</div>
-                <div>
-                    <h4 style="margin: 0; font-size: 18px;">Michael Wong</h4>
-                    <p style="margin: 0; color: var(--light-gray);">行业顾问</p>
-                </div>
-            </div>
-            <ul style="list-style-type: none; padding-left: 75px; font-size: 14px; color: var(--text-color);">
-                <li>✦ 房地产通证化先驱，成功将5亿美元房地产资产进行通证化</li>
-                <li>✦ 新加坡某大型房地产集团前创新总监</li>
-                <li>✦ 哥伦比亚大学房地产金融硕士</li>
-            </ul>
-        </div>
-    </div>
+    ... (顾问内容)
     
     <h3>现有战略合作伙伴</h3>
-    
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin: 30px 0;">
-        <!-- 合作伙伴1 -->
-        <div style="flex: 0 0 22%; min-width: 200px; margin-bottom: 20px; text-align: center; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
-            <div style="height: 80px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
-                <div style="font-size: 20px; font-weight: bold; color: var(--secondary-color);">东芝能源系统</div>
-            </div>
-            <p style="font-size: 14px; color: var(--light-gray); margin: 0;">为储能电站项目提供Aggregator服务</p>
-        </div>
-        
-        <!-- 合作伙伴2 -->
-        <div style="flex: 0 0 22%; min-width: 200px; margin-bottom: 20px; text-align: center; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
-            <div style="height: 80px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
-                <div style="font-size: 20px; font-weight: bold; color: var(--secondary-color);">华为数字能源</div>
-            </div>
-            <p style="font-size: 14px; color: var(--light-gray); margin: 0;">提供储能技术解决方案与支持</p>
-        </div>
-        
-        <!-- 合作伙伴3 -->
-        <div style="flex: 0 0 22%; min-width: 200px; margin-bottom: 20px; text-align: center; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
-            <div style="height: 80px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
-                <div style="font-size: 20px; font-weight: bold; color: var(--secondary-color);">CertiK</div>
-            </div>
-            <p style="font-size: 14px; color: var(--light-gray); margin: 0;">智能合约安全审计</p>
-        </div>
-        
-        <!-- 合作伙伴4 -->
-        <div style="flex: 0 0 22%; min-width: 200px; margin-bottom: 20px; text-align: center; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
-            <div style="height: 80px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
-                <div style="font-size: 20px; font-weight: bold; color: var(--secondary-color);">日本储能行业协会</div>
-            </div>
-            <p style="font-size: 14px; color: var(--light-gray); margin: 0;">提供资产方资源与行业支持</p>
-        </div>
-    </div>
-    
-    <div class="section-cta">
-        <a href="#" class="cta">了解更多团队背景</a>
-    </div>
+    ... (合作伙伴内容)
+    -->
 </section>
-
-<div class="section-divider"></div>
 
 <section id="financial">
     <h2>财务预测与资本规划</h2>
