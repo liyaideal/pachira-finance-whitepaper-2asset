@@ -1,0 +1,52 @@
+name: Deploy Calculator
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'calculator/**'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+        
+    - name: Install dependencies
+      run: |
+        cd calculator
+        npm ci
+        
+    - name: Build
+      run: |
+        cd calculator
+        npm run build
+        
+    # 根据您的部署方式选择以下某一方式
+    
+    # 选项1: 使用 GitHub Pages
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4.4.1
+      with:
+        branch: gh-pages
+        folder: calculator/build
+        clean: true
+        
+    # 选项2: 如果您使用 Netlify
+    # - name: Deploy to Netlify
+    #   uses: nwtgck/actions-netlify@v1.2
+    #   with:
+    #     publish-dir: './calculator/build'
+    #     production-branch: main
+    #     github-token: ${{ secrets.GITHUB_TOKEN }}
+    #     deploy-message: "Deploy from GitHub Actions"
+    #   env:
+    #     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+    #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
