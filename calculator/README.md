@@ -1,1 +1,0 @@
-Ploutos Finance Calculator
