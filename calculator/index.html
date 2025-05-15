@@ -1,628 +1,897 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>金融计算器 - Ploutos Finance</title>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/lodash@4.17.21/lodash.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ploutos Finance 5年财务预测模型</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <!-- React, ReactDOM and Lodash -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.20.4/babel.min.js"></script>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        .overflow-x-auto {
+            overflow-x: auto;
+        }
+    </style>
 </head>
-<body>
-  <div id="root"></div>
+<body class="bg-gray-100">
+    <div id="root" class="container mx-auto py-8 px-4"></div>
 
-  <script type="text/babel">
-    // 这里粘贴您的React组件代码
-    const { useState } = React;
-    
-    // 粘贴您之前分享的FinancialModel代码...
-    const App = () => {
-      // 财务模型应用
-      const FinancialModel = () => {
-        // 状态管理
-        const [activeTab, setActiveTab] = useState(0);
-        const [parameters, setParameters] = useState({
-          // 时间参数
-          startQuarter: "2025 Q2",
-          forecastPeriod: "5年",
-          // 初始资金
-          initialFunding: 2000000,
-          // 融资计划
-          financing: [
-            { quarter: "2025Q2", amount: 0, note: "天使轮已完成" },
-            { quarter: "2026Q1", amount: 2000000, note: "A轮融资" },
-            { quarter: "2027Q2", amount: 5000000, note: "B轮融资" },
-            { quarter: "2028Q3", amount: 0, note: "暂无计划" },
-            { quarter: "2029Q4", amount: 0, note: "暂无计划" }
-          ],
-          // AUM增长预测
-          aumGrowth: [
-            { period: "2025年Q2", aum: 2000000, growthRate: 0 },
-            { period: "2025年Q3-Q4", aum: 5000000, growthRate: 1.5 },
-            { period: "2026年", aum: 25000000, growthRate: 4 },
-            { period: "2027年", aum: 100000000, growthRate: 3 },
-            { period: "2028年", aum: 250000000, growthRate: 1.5 },
-            { period: "2029年", aum: 500000000, growthRate: 1 },
-            { period: "2030年Q1", aum: 575000000, growthRate: 0.15 }
-          ],
-          // 收入参数
-          tokenizationFee: 0.015,
-          // 通证化费率
-          managementFee: 0.01,
-          // 年管理费率
-          transactionFee: 0.002,
-          // 交易费率
-          transactionVolume: 0.5,
-          // 年交易量占AUM比例
-          lendingServiceFee: 0.003,
-          // 借贷服务费率
-          lendingSpread: 0.02,
-          // 借贷利差
-          // 借贷规模占AUM比例
-          lendingRatio: [
-            { year: 2025, ratio: 0, note: "业务尚未启动" },
-            { year: 2026, ratio: 0.2, note: "业务初步启动" },
-            { year: 2027, ratio: 0.3, note: "业务稳步增长" },
-            { year: 2028, ratio: 0.35, note: "业务成熟发展" },
-            { year: 2029, ratio: 0.4, note: "业务全面深化" },
-            { year: 2030, ratio: 0.4, note: "业务持续优化" }
-          ],
-          // 成本类别
-          costCategories: [
-            { id: "tech", name: "技术开发成本", isActive: true },
-            { id: "marketing", name: "营销与销售成本", isActive: true },
-            { id: "legal", name: "法律与合规成本", isActive: true },
-            { id: "operation", name: "运营成本", isActive: true },
-            { id: "custom1", name: "自定义成本1", isActive: false },
-            { id: "custom2", name: "自定义成本2", isActive: false },
-            { id: "custom3", name: "自定义成本3", isActive: false }
-          ],
-          // 成本参数 - 团队成本（每季度）
-          teamCost: [
-            { period: "2025年Q2", cost: 150000 },
-            { period: "2025年Q3-Q4", cost: 175000 },
-            { period: "2026年", cost: 200000 },
-            { period: "2027年", cost: 375000 },
-            { period: "2028年", cost: 625000 },
-            { period: "2029年", cost: 875000 },
-            { period: "2030年Q1", cost: 900000 }
-          ],
-          // 自定义成本
-          custom1Cost: [
-            { period: "2025年Q2", cost: 0 },
-            { period: "2025年Q3-Q4", cost: 0 },
-            { period: "2026年", cost: 0 },
-            { period: "2027年", cost: 0 },
-            { period: "2028年", cost: 0 },
-            { period: "2029年", cost: 0 },
-            { period: "2030年Q1", cost: 0 }
-          ],
-          custom2Cost: [
-            { period: "2025年Q2", cost: 0 },
-            { period: "2025年Q3-Q4", cost: 0 },
-            { period: "2026年", cost: 0 },
-            { period: "2027年", cost: 0 },
-            { period: "2028年", cost: 0 },
-            { period: "2029年", cost: 0 },
-            { period: "2030年Q1", cost: 0 }
-          ],
-          // 技术开发成本（每季度）
-          techCost: [
-            { period: "2025年Q2", cost: 200000 },
-            { period: "2025年Q3-Q4", cost: 100000 },
-            { period: "2026年", cost: 150000 },
-            { period: "2027年", cost: 200000 },
-            { period: "2028年", cost: 300000 },
-            { period: "2029年", cost: 400000 },
-            { period: "2030年Q1", cost: 400000 }
-          ],
-          // 营销与销售成本（每季度）
-          marketingCost: [
-            { period: "2025年Q2", cost: 75000 },
-            { period: "2025年Q3-Q4", cost: 100000 },
-            { period: "2026年", cost: 125000 },
-            { period: "2027年", cost: 175000 },
-            { period: "2028年", cost: 250000 },
-            { period: "2029年", cost: 325000 },
-            { period: "2030年Q1", cost: 350000 }
-          ],
-          // 法律与合规成本（每季度）
-          legalCost: [
-            { period: "2025年Q2", cost: 75000 },
-            { period: "2025年Q3-Q4", cost: 75000 },
-            { period: "2026年", cost: 100000 },
-            { period: "2027年", cost: 150000 },
-            { period: "2028年", cost: 200000 },
-            { period: "2029年", cost: 250000 },
-            { period: "2030年Q1", cost: 275000 }
-          ],
-          // 运营成本（每季度）
-          operationCost: [
-            { period: "2025年Q2", cost: 50000 },
-            { period: "2025年Q3-Q4", cost: 50000 },
-            { period: "2026年", cost: 75000 },
-            { period: "2027年", cost: 100000 },
-            { period: "2028年", cost: 125000 },
-            { period: "2029年", cost: 175000 },
-            { period: "2030年Q1", cost: 200000 }
-          ],
-          // 折旧摊销
-          depreciation: [
-            { period: "2025年Q2", value: 40000 },
-            { period: "2025年Q3-Q4", value: 30000 },
-            { period: "2026年", value: 30000 },
-            { period: "2027年", value: 40000 },
-            { period: "2028年", value: 60000 },
-            { period: "2029年", value: 80000 },
-            { period: "2030年Q1", value: 85000 }
-          ],
-          // 税率
-          taxRate: 0.25
-        });
+    <script type="text/babel">
+        const { useState } = React;
 
-        // 这里是您的FinancialModel其余代码...
-        // 包括generateQuarters, getAumGrowth, calculateAumForecast等函数...
-        
-        // 生成季度序列（2025年Q2至2030年Q1）
-        const generateQuarters = () => {
-          const quarters = [];
-          const years = [2025, 2026, 2027, 2028, 2029, 2030];
-          
-          for (const year of years) {
-            if (year === 2025) {
-              quarters.push(`${year}Q2`);
-              quarters.push(`${year}Q3`);
-              quarters.push(`${year}Q4`);
-            } else if (year === 2030) {
-              quarters.push(`${year}Q1`);
-            } else {
-              quarters.push(`${year}Q1`);
-              quarters.push(`${year}Q2`);
-              quarters.push(`${year}Q3`);
-              quarters.push(`${year}Q4`);
-            }
-          }
-          
-          return quarters;
-        };
-
-        // 返回指定季度的AUM增长值
-        const getAumGrowth = (quarter) => {
-          const year = parseInt(quarter.substring(0, 4));
-          const q = quarter.substring(4, 6);
-          
-          // 2025Q2是初始AUM
-          if (quarter === "2025Q2") {
-            return parameters.aumGrowth[0].aum;
-          }
-          
-          // 2025年Q3-Q4
-          if ((year === 2025) && (q === "Q3" || q === "Q4")) {
-            const growthRate = parameters.aumGrowth[1].growthRate;
-            return parameters.aumGrowth[0].aum * growthRate / 2;
-          }
-          
-          // 2026-2029年各季度
-          if (year >= 2026 && year <= 2029) {
-            const yearIndex = year - 2025 + 1;
+        // 财务模型应用
+        const FinancialModel = () => {
+          // 状态管理
+          const [activeTab, setActiveTab] = useState(0);
+          const [parameters, setParameters] = useState({
+            // 时间参数
+            startQuarter: "2025 Q2",
+            forecastPeriod: "5年",
             
-            // 对应parameters.aumGrowth中的索引
-            const previousYearTarget = parameters.aumGrowth[yearIndex - 1].aum;
-            const currentYearTarget = parameters.aumGrowth[yearIndex].aum;
-            const yearlyGrowth = currentYearTarget - previousYearTarget;
+            // 初始资金
+            initialFunding: 2000000,
             
-            // 平均分配到4个季度
-            return yearlyGrowth / 4;
-          }
-          
-          // 2030年Q1
-          if (year === 2030 && q === "Q1") {
-            const previousYearAum = parameters.aumGrowth[5].aum;
-            const targetAum = parameters.aumGrowth[6].aum;
-            return targetAum - previousYearAum;
-          }
-          
-          // 默认返回0
-          return 0;
-        };
-
-        // 计算AUM预测
-        const calculateAumForecast = () => {
-          const quarters = generateQuarters();
-          const forecast = [];
-          
-          for (let i = 0; i < quarters.length; i++) {
-            const quarter = quarters[i];
-            const growthAmount = getAumGrowth(quarter);
-            let beginningAum = 0;
+            // 融资计划
+            financing: [
+              { quarter: "2025Q2", amount: 0, note: "天使轮已完成" },
+              { quarter: "2026Q1", amount: 2000000, note: "A轮融资" },
+              { quarter: "2027Q2", amount: 5000000, note: "B轮融资" },
+              { quarter: "2028Q3", amount: 0, note: "暂无计划" },
+              { quarter: "2029Q4", amount: 0, note: "暂无计划" }
+            ],
             
-            if (i === 0) {
-              beginningAum = 0; // 2025Q2从0开始
-            } else {
-              beginningAum = forecast[i - 1].endingAum;
-            }
+            // AUM增长预测
+            aumGrowth: [
+              { period: "2025年Q2", aum: 2000000, growthRate: 0 },
+              { period: "2025年Q3-Q4", aum: 5000000, growthRate: 1.5 },
+              { period: "2026年", aum: 25000000, growthRate: 4 },
+              { period: "2027年", aum: 100000000, growthRate: 3 },
+              { period: "2028年", aum: 250000000, growthRate: 1.5 },
+              { period: "2029年", aum: 500000000, growthRate: 1 },
+              { period: "2030年Q1", aum: 575000000, growthRate: 0.15 }
+            ],
             
-            const endingAum = beginningAum + growthAmount;
-            const averageAum = (beginningAum + endingAum) / 2;
+            // 收入参数
+            tokenizationFee: 0.015,  // 通证化费率
+            managementFee: 0.01,     // 年管理费率
+            transactionFee: 0.002,   // 交易费率
+            transactionVolume: 0.5,  // 年交易量占AUM比例
+            lendingServiceFee: 0.003, // 借贷服务费率
+            lendingSpread: 0.02,     // 借贷利差
             
-            forecast.push({ quarter, beginningAum, growthAmount, endingAum, averageAum });
-          }
-          
-          return forecast;
-        };
-
-        // 获取指定成本类别的季度成本
-        const getActiveCostCategories = () => {
-          return parameters.costCategories.filter(category => category.isActive);
-        };
-
-        // 获取特定成本类别的数据序列
-        const getCostDataForCategory = (categoryId) => {
-          switch (categoryId) {
-            case "tech":
-              return parameters.techCost;
-            case "marketing":
-              return parameters.marketingCost;
-            case "legal":
-              return parameters.legalCost;
-            case "operation":
-              return parameters.operationCost;
-            case "custom1":
-              return parameters.custom1Cost;
-            case "custom2":
-              return parameters.custom2Cost;
-            case "custom3":
-              return parameters.custom3Cost;
-            default:
-              return [];
-          }
-        };
-
-        // 根据期间和类别获取成本值
-        const getCostForPeriodAndCategory = (period, categoryId) => {
-          const costData = getCostDataForCategory(categoryId);
-          const periodCost = costData.find(item => item.period === period);
-          return periodCost ? periodCost.cost : 0;
-        };
-
-        // 计算特定季度的总成本
-        const calculateTotalCostForQuarter = (quarter) => {
-          // 将quarter (e.g., "2025Q2") 转换为 period格式 (e.g., "2025年Q2")
-          const year = quarter.substring(0, 4);
-          const q = quarter.substring(4);
-          let period;
-          
-          if (year === "2025" && (q === "Q3" || q === "Q4")) {
-            period = "2025年Q3-Q4";
-          } else {
-            period = `${year}年${q}`;
-          }
-          
-          const activeCategories = getActiveCostCategories();
-          let totalCost = 0;
-          
-          activeCategories.forEach(category => {
-            totalCost += getCostForPeriodAndCategory(period, category.id);
+            // 借贷规模占AUM比例
+            lendingRatio: [
+              { year: 2025, ratio: 0, note: "业务尚未启动" },
+              { year: 2026, ratio: 0.2, note: "业务初步启动" },
+              { year: 2027, ratio: 0.3, note: "业务稳步增长" },
+              { year: 2028, ratio: 0.35, note: "业务成熟发展" },
+              { year: 2029, ratio: 0.4, note: "业务全面扩展" },
+              { year: 2030, ratio: 0.45, note: "业务持续优化" }
+            ],
+            
+            // 成本类别
+            costCategories: [
+              { id: "team", name: "团队成本", isActive: true },
+              { id: "tech", name: "技术开发成本", isActive: true },
+              { id: "marketing", name: "营销与销售成本", isActive: true },
+              { id: "legal", name: "法律与合规成本", isActive: true },
+              { id: "operation", name: "运营成本", isActive: true },
+              { id: "custom1", name: "自定义成本1", isActive: false },
+              { id: "custom2", name: "自定义成本2", isActive: false },
+              { id: "custom3", name: "自定义成本3", isActive: false }
+            ],
+            
+            // 成本参数 - 团队成本（每季度）
+            teamCost: [
+              { period: "2025年Q2", cost: 150000 },
+              { period: "2025年Q3-Q4", cost: 175000 },
+              { period: "2026年", cost: 200000 },
+              { period: "2027年", cost: 375000 },
+              { period: "2028年", cost: 625000 },
+              { period: "2029年", cost: 875000 },
+              { period: "2030年Q1", cost: 900000 }
+            ],
+            
+            // 自定义成本
+            custom1Cost: [
+              { period: "2025年Q2", cost: 0 },
+              { period: "2025年Q3-Q4", cost: 0 },
+              { period: "2026年", cost: 0 },
+              { period: "2027年", cost: 0 },
+              { period: "2028年", cost: 0 },
+              { period: "2029年", cost: 0 },
+              { period: "2030年Q1", cost: 0 }
+            ],
+            
+            custom2Cost: [
+              { period: "2025年Q2", cost: 0 },
+              { period: "2025年Q3-Q4", cost: 0 },
+              { period: "2026年", cost: 0 },
+              { period: "2027年", cost: 0 },
+              { period: "2028年", cost: 0 },
+              { period: "2029年", cost: 0 },
+              { period: "2030年Q1", cost: 0 }
+            ],
+            
+            custom3Cost: [
+              { period: "2025年Q2", cost: 0 },
+              { period: "2025年Q3-Q4", cost: 0 },
+              { period: "2026年", cost: 0 },
+              { period: "2027年", cost: 0 },
+              { period: "2028年", cost: 0 },
+              { period: "2029年", cost: 0 },
+              { period: "2030年Q1", cost: 0 }
+            ],
+            
+            // 技术开发成本（每季度）
+            techCost: [
+              { period: "2025年Q2", cost: 200000 },
+              { period: "2025年Q3-Q4", cost: 150000 },
+              { period: "2026年", cost: 150000 },
+              { period: "2027年", cost: 200000 },
+              { period: "2028年", cost: 300000 },
+              { period: "2029年", cost: 375000 },
+              { period: "2030年Q1", cost: 400000 }
+            ],
+            
+            // 营销与销售成本（每季度）
+            marketingCost: [
+              { period: "2025年Q2", cost: 75000 },
+              { period: "2025年Q3-Q4", cost: 100000 },
+              { period: "2026年", cost: 125000 },
+              { period: "2027年", cost: 175000 },
+              { period: "2028年", cost: 250000 },
+              { period: "2029年", cost: 325000 },
+              { period: "2030年Q1", cost: 350000 }
+            ],
+            
+            // 法律与合规成本（每季度）
+            legalCost: [
+              { period: "2025年Q2", cost: 75000 },
+              { period: "2025年Q3-Q4", cost: 75000 },
+              { period: "2026年", cost: 100000 },
+              { period: "2027年", cost: 150000 },
+              { period: "2028年", cost: 200000 },
+              { period: "2029年", cost: 250000 },
+              { period: "2030年Q1", cost: 275000 }
+            ],
+            
+            // 运营成本（每季度）
+            operationCost: [
+              { period: "2025年Q2", cost: 50000 },
+              { period: "2025年Q3-Q4", cost: 50000 },
+              { period: "2026年", cost: 75000 },
+              { period: "2027年", cost: 100000 },
+              { period: "2028年", cost: 125000 },
+              { period: "2029年", cost: 175000 },
+              { period: "2030年Q1", cost: 200000 }
+            ],
+            
+            // 折旧摊销
+            depreciation: [
+              { period: "2025年Q2", value: 40000 },
+              { period: "2025年Q3-Q4", value: 30000 },
+              { period: "2026年", value: 30000 },
+              { period: "2027年", value: 40000 },
+              { period: "2028年", value: 60000 },
+              { period: "2029年", value: 80000 },
+              { period: "2030年Q1", value: 85000 }
+            ],
+            
+            // 税率
+            taxRate: 0.25
           });
           
-          return totalCost;
-        };
-
-        // 计算特定季度的折旧摊销
-        const getDepreciationForQuarter = (quarter) => {
-          // 将quarter转换为period格式
-          const year = quarter.substring(0, 4);
-          const q = quarter.substring(4);
-          let period;
+          // 计算季度序列（21个季度：从2025Q2到2030Q1）
+          const generateQuarters = () => {
+            const quarters = [];
+            const years = [2025, 2026, 2027, 2028, 2029, 2030];
+            
+            for (const year of years) {
+              if (year === 2025) {
+                quarters.push(`${year}Q2`);
+                quarters.push(`${year}Q3`);
+                quarters.push(`${year}Q4`);
+              } else if (year === 2030) {
+                quarters.push(`${year}Q1`);
+              } else {
+                quarters.push(`${year}Q1`);
+                quarters.push(`${year}Q2`);
+                quarters.push(`${year}Q3`);
+                quarters.push(`${year}Q4`);
+              }
+            }
+            
+            return quarters;
+          };
           
-          if (year === "2025" && (q === "Q3" || q === "Q4")) {
-            period = "2025年Q3-Q4";
-          } else {
-            period = `${year}年${q}`;
-          }
-          
-          const depreciation = parameters.depreciation.find(item => item.period === period);
-          return depreciation ? depreciation.value : 0;
-        };
-
-        // 计算特定年份的借贷比率
-        const getLendingRatioForYear = (year) => {
-          const yearRatio = parameters.lendingRatio.find(item => item.year === parseInt(year));
-          return yearRatio ? yearRatio.ratio : 0;
-        };
-
-        // 计算财务预测
-        const calculateFinancialForecast = () => {
-          const forecast = [];
-          const aumForecast = calculateAumForecast();
-          
-          // 初始现金 = 初始资金
-          let remainingCash = parameters.initialFunding;
-          
-          for (let i = 0; i < aumForecast.length; i++) {
-            const quarterData = aumForecast[i];
-            const quarter = quarterData.quarter;
-            const year = quarter.substring(0, 4);
+          // 返回指定季度的AUM增长值
+          const getAumGrowth = (quarter) => {
+            const year = parseInt(quarter.substring(0, 4));
+            const q = quarter.substring(4, 6);
             
-            // 检查该季度是否有融资
-            const financing = parameters.financing.find(f => f.quarter === quarter);
-            const financingAmount = financing ? financing.amount : 0;
+            // 2025Q2是初始AUM
+            if (quarter === "2025Q2") {
+              return parameters.aumGrowth[0].aum;
+            }
             
-            // 增加融资金额
-            remainingCash += financingAmount;
+            // 2025年Q3-Q4
+            if ((year === 2025) && (q === "Q3" || q === "Q4")) {
+              const growthRate = parameters.aumGrowth[1].growthRate;
+              return parameters.aumGrowth[0].aum * growthRate / 2; // 平均分配到Q3和Q4
+            }
             
-            // 计算收入
-            // 1. 通证化费收入 = 新增AUM * 通证化费率
-            const tokenizationIncome = quarterData.growthAmount * parameters.tokenizationFee;
-            
-            // 2. 管理费收入 = 平均AUM * 管理费率 / 4 (季度)
-            const managementIncome = quarterData.averageAum * parameters.managementFee / 4;
-            
-            // 3. 交易费收入 = 平均AUM * 交易量比例 * 交易费率 / 4 (季度)
-            const transactionIncome = quarterData.averageAum * parameters.transactionVolume * parameters.transactionFee / 4;
-            
-            // 4. 借贷收入 = 平均AUM * 借贷比例 * (借贷服务费 + 借贷利差) / 4 (季度)
-            const lendingRatio = getLendingRatioForYear(year);
-            const lendingIncome = quarterData.averageAum * lendingRatio * (parameters.lendingServiceFee + parameters.lendingSpread) / 4;
-            
-            // 总收入
-            const totalIncome = tokenizationIncome + managementIncome + transactionIncome + lendingIncome;
-            
-            // 计算成本
-            const totalCost = calculateTotalCostForQuarter(quarter);
-            const depreciation = getDepreciationForQuarter(quarter);
-            
-            // 息税前利润 (EBIT)
-            const ebit = totalIncome - totalCost - depreciation;
-            
-            // 所得税
-            const tax = ebit > 0 ? ebit * parameters.taxRate : 0;
-            
-            // 净利润
-            const netIncome = ebit - tax;
-            
-            // 自由现金流 = 净利润 + 折旧 - 资本支出
-            // 简化假设：资本支出 = 折旧
-            const freeCashFlow = netIncome;
-            
-            // 更新剩余现金
-            remainingCash += freeCashFlow;
-            
-            // 添加到预测结果
-            forecast.push({
-              quarter,
-              averageAum: quarterData.averageAum,
-              tokenizationIncome,
-              managementIncome,
-              transactionIncome,
-              lendingIncome,
-              totalIncome,
-              totalCost,
-              depreciation,
-              ebit,
-              tax,
-              netIncome,
-              freeCashFlow,
-              remainingCash,
-              financingAmount
-            });
-          }
-          
-          return forecast;
-        };
-
-        // 格式化数字为金额显示
-        const formatNumber = (num) => {
-          if (num === 0) return "-";
-          
-          if (Math.abs(num) >= 1000000) {
-            return (num / 1000000).toFixed(2) + "M";
-          } else if (Math.abs(num) >= 1000) {
-            return (num / 1000).toFixed(2) + "K";
-          } else {
-            return num.toFixed(2);
-          }
-        };
-
-        // 渲染财务预测表格
-        const renderFinancialForecast = () => {
-          const forecast = calculateFinancialForecast();
-          
-          return (
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-300">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="sticky left-0 bg-gray-100 px-4 py-2 border">季度</th>
-                    <th className="px-4 py-2 border">平均AUM</th>
-                    <th className="px-4 py-2 border">通证化收入</th>
-                    <th className="px-4 py-2 border">管理费收入</th>
-                    <th className="px-4 py-2 border">交易费收入</th>
-                    <th className="px-4 py-2 border">借贷收入</th>
-                    <th className="px-4 py-2 border">总收入</th>
-                    <th className="px-4 py-2 border">总成本</th>
-                    <th className="px-4 py-2 border">折旧摊销</th>
-                    <th className="px-4 py-2 border">EBIT</th>
-                    <th className="px-4 py-2 border">税</th>
-                    <th className="px-4 py-2 border">净利润</th>
-                    <th className="px-4 py-2 border">现金流</th>
-                    <th className="px-4 py-2 border">融资</th>
-                    <th className="px-4 py-2 border">剩余现金</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {forecast.map((item, index) => (
-                    <tr key={index} className={index % 2 === 0 ? "bg-gray-50" : ""}>
-                      <td className="sticky left-0 bg-white px-4 py-2 border font-medium">{item.quarter}</td>
-                      <td className="px-4 py-2 border text-right">{formatNumber(item.averageAum)}</td>
-                      <td className="px-4 py-2 border text-right">{formatNumber(item.tokenizationIncome)}</td>
-                      <td className="px-4 py-2 border text-right">{formatNumber(item.managementIncome)}</td>
-                      <td className="px-4 py-2 border text-right">{formatNumber(item.transactionIncome)}</td>
-                      <td className="px-4 py-2 border text-right">{formatNumber(item.lendingIncome)}</td>
-                      <td className="px-4 py-2 border text-right font-medium">{formatNumber(item.totalIncome)}</td>
-                      <td className="px-4 py-2 border text-right">{formatNumber(item.totalCost)}</td>
-                      <td className="px-4 py-2 border text-right">{formatNumber(item.depreciation)}</td>
-                      <td className="px-4 py-2 border text-right">{formatNumber(item.ebit)}</td>
-                      <td className="px-4 py-2 border text-right">{formatNumber(item.tax)}</td>
-                      <td className="px-4 py-2 border text-right font-medium">{formatNumber(item.netIncome)}</td>
-                      <td className="px-4 py-2 border text-right">{formatNumber(item.freeCashFlow)}</td>
-                      <td className="px-4 py-2 border text-right">{formatNumber(item.financingAmount)}</td>
-                      <td className="px-4 py-2 border text-right font-medium">{formatNumber(item.remainingCash)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          );
-        };
-
-        // 主要渲染函数
-        return (
-          <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold mb-4">金融科技创业公司财务预测模型</h1>
-            
-            <div className="mb-6">
-              <div className="flex border-b border-gray-200">
-                <button 
-                  className={`py-2 px-4 ${activeTab === 0 ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-600"}`}
-                  onClick={() => setActiveTab(0)}
-                >
-                  财务预测
-                </button>
-                <button 
-                  className={`py-2 px-4 ${activeTab === 1 ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-600"}`}
-                  onClick={() => setActiveTab(1)}
-                >
-                  参数设置
-                </button>
-              </div>
+            // 2026-2029年各季度
+            if (year >= 2026 && year <= 2029) {
+              const yearIndex = year - 2025 + 1; // 对应parameters.aumGrowth中的索引
+              const previousYearTarget = parameters.aumGrowth[yearIndex - 1].aum;
+              const currentYearTarget = parameters.aumGrowth[yearIndex].aum;
+              const yearlyGrowth = currentYearTarget - previousYearTarget;
               
-              <div className="mt-4">
-                {activeTab === 0 ? (
-                  <div>
-                    <h2 className="text-xl font-semibold mb-4">财务预测结果</h2>
-                    {renderFinancialForecast()}
-                  </div>
-                ) : (
-                  <div>
-                    <h2 className="text-xl font-semibold mb-4">模型参数配置</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <h3 className="font-medium mb-2">基本参数</h3>
-                        <div className="mb-2">
-                          <label className="block text-sm text-gray-600">开始季度</label>
-                          <input 
-                            type="text" 
-                            value={parameters.startQuarter} 
-                            className="w-full p-2 border rounded"
-                            onChange={(e) => setParameters({...parameters, startQuarter: e.target.value})}
-                          />
-                        </div>
-                        <div className="mb-2">
-                          <label className="block text-sm text-gray-600">预测期间</label>
-                          <input 
-                            type="text" 
-                            value={parameters.forecastPeriod} 
-                            className="w-full p-2 border rounded"
-                            onChange={(e) => setParameters({...parameters, forecastPeriod: e.target.value})}
-                          />
-                        </div>
-                        <div className="mb-2">
-                          <label className="block text-sm text-gray-600">初始资金</label>
-                          <input 
-                            type="number" 
-                            value={parameters.initialFunding} 
-                            className="w-full p-2 border rounded"
-                            onChange={(e) => setParameters({...parameters, initialFunding: parseFloat(e.target.value)})}
-                          />
-                        </div>
-                      </div>
-                      
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <h3 className="font-medium mb-2">收入参数</h3>
-                        <div className="mb-2">
-                          <label className="block text-sm text-gray-600">通证化费率</label>
-                          <input 
-                            type="number" 
-                            value={parameters.tokenizationFee}
-                            step="0.001" 
-                            className="w-full p-2 border rounded"
-                            onChange={(e) => setParameters({...parameters, tokenizationFee: parseFloat(e.target.value)})}
-                          />
-                        </div>
-                        <div className="mb-2">
-                          <label className="block text-sm text-gray-600">管理费率</label>
-                          <input 
-                            type="number" 
-                            value={parameters.managementFee}
-                            step="0.001" 
-                            className="w-full p-2 border rounded"
-                            onChange={(e) => setParameters({...parameters, managementFee: parseFloat(e.target.value)})}
-                          />
-                        </div>
-                        <div className="mb-2">
-                          <label className="block text-sm text-gray-600">交易费率</label>
-                          <input 
-                            type="number" 
-                            value={parameters.transactionFee}
-                            step="0.001" 
-                            className="w-full p-2 border rounded"
-                            onChange={(e) => setParameters({...parameters, transactionFee: parseFloat(e.target.value)})}
-                          />
-                        </div>
-                        <div className="mb-2">
-                          <label className="block text-sm text-gray-600">交易量比例</label>
-                          <input 
-                            type="number" 
-                            value={parameters.transactionVolume}
-                            step="0.1" 
-                            className="w-full p-2 border rounded"
-                            onChange={(e) => setParameters({...parameters, transactionVolume: parseFloat(e.target.value)})}
-                          />
-                        </div>
-                      </div>
+              // 平均分配到4个季度
+              return yearlyGrowth / 4;
+            }
+            
+            // 2030年Q1
+            if (year === 2030 && q === "Q1") {
+              const previousYearAum = parameters.aumGrowth[5].aum; // 2029年
+              const targetAum = parameters.aumGrowth[6].aum; // 2030年Q1
+              return targetAum - previousYearAum;
+            }
+            
+            return 0; // 默认返回0
+          };
+          
+          // 计算AUM预测
+          const calculateAumForecast = () => {
+            const quarters = generateQuarters();
+            const forecast = [];
+            
+            for (let i = 0; i < quarters.length; i++) {
+              const quarter = quarters[i];
+              const growthAmount = getAumGrowth(quarter);
+              
+              let beginningAum = 0;
+              if (i === 0) {
+                beginningAum = 0; // 2025Q2从0开始
+              } else {
+                beginningAum = forecast[i - 1].endingAum;
+              }
+              
+              const endingAum = beginningAum + growthAmount;
+              const averageAum = (beginningAum + endingAum) / 2;
+              
+              forecast.push({
+                quarter,
+                beginningAum,
+                growthAmount,
+                endingAum,
+                averageAum
+              });
+            }
+            
+            return forecast;
+          };
+          
+          // 获取活跃的成本类别
+          const getActiveCostCategories = () => {
+            return parameters.costCategories.filter(category => category.isActive);
+          };
+          
+          // 获取特定成本类别的数据
+          const getCostDataForCategory = (categoryId) => {
+            switch(categoryId) {
+              case 'team': return parameters.teamCost;
+              case 'tech': return parameters.techCost;
+              case 'marketing': return parameters.marketingCost;
+              case 'legal': return parameters.legalCost;
+              case 'operation': return parameters.operationCost;
+              case 'custom1': return parameters.custom1Cost;
+              case 'custom2': return parameters.custom2Cost;
+              case 'custom3': return parameters.custom3Cost;
+              default: return [];
+            }
+          };
+          
+          // 获取特定期间的成本值
+          const getCostForPeriod = (costArray, quarter) => {
+            const year = parseInt(quarter.substring(0, 4));
+            const q = quarter.substring(4, 6);
+            
+            // 特定季度 2025Q2
+            if (quarter === "2025Q2") {
+              return costArray.find(item => item.period === "2025年Q2")?.cost || 0;
+            }
+            
+            // 2025 Q3-Q4
+            if (year === 2025 && (q === "Q3" || q === "Q4")) {
+              return costArray.find(item => item.period === "2025年Q3-Q4")?.cost || 0;
+            }
+            
+            // 2026-2029年各季度
+            if (year >= 2026 && year <= 2029) {
+              return costArray.find(item => item.period === `${year}年`)?.cost || 0;
+            }
+            
+            // 2030年Q1
+            if (year === 2030 && q === "Q1") {
+              return costArray.find(item => item.period === "2030年Q1")?.cost || 0;
+            }
+            
+            return 0; // 默认返回0
+          };
+          
+          // 处理成本类别的切换
+          const handleCostCategoryToggle = (index) => {
+            const updatedParameters = { ...parameters };
+            updatedParameters.costCategories[index].isActive = !updatedParameters.costCategories[index].isActive;
+            setParameters(updatedParameters);
+          };
+          
+          // 处理成本类别名称的更改
+          const handleCostCategoryNameChange = (index, newName) => {
+            const updatedParameters = { ...parameters };
+            updatedParameters.costCategories[index].name = newName;
+            setParameters(updatedParameters);
+          };
+          
+          // 获取特定年份的借贷比例
+          const getLendingRatio = (quarter) => {
+            const year = parseInt(quarter.substring(0, 4));
+            const yearData = parameters.lendingRatio.find(item => item.year === year);
+            return yearData ? yearData.ratio : 0;
+          };
+          
+          // 获取特定季度的折旧摊销值
+          const getDepreciation = (quarter) => {
+            const year = parseInt(quarter.substring(0, 4));
+            const q = quarter.substring(4, 6);
+            
+            // 特定季度 2025Q2
+            if (quarter === "2025Q2") {
+              return parameters.depreciation.find(item => item.period === "2025年Q2")?.value || 0;
+            }
+            
+            // 2025 Q3-Q4
+            if (year === 2025 && (q === "Q3" || q === "Q4")) {
+              return parameters.depreciation.find(item => item.period === "2025年Q3-Q4")?.value || 0;
+            }
+            
+            // 2026-2029年各季度
+            if (year >= 2026 && year <= 2029) {
+              return parameters.depreciation.find(item => item.period === `${year}年`)?.value || 0;
+            }
+            
+            // 2030年Q1
+            if (year === 2030 && q === "Q1") {
+              return parameters.depreciation.find(item => item.period === "2030年Q1")?.value || 0;
+            }
+            
+            return 0; // 默认返回0
+          };
+          
+          // 计算收入预测
+          const calculateIncomeForecast = (aumForecast) => {
+            return aumForecast.map(item => {
+              // 通证化费收入 = 本季度AUM增长 * 通证化费率
+              const tokenizationIncome = item.growthAmount * parameters.tokenizationFee;
+              
+              // 管理费收入 = 平均AUM * 管理费率 / 4 (按季度计算)
+              const managementIncome = item.averageAum * parameters.managementFee / 4;
+              
+              // 交易费收入 = 平均AUM * 交易量比例 * 交易费率 / 4 (按季度计算)
+              const transactionIncome = item.averageAum * parameters.transactionVolume * parameters.transactionFee / 4;
+              
+              // 借贷服务费 = 平均AUM * 借贷比例 * 借贷服务费率 / 4
+              const lendingRatio = getLendingRatio(item.quarter);
+              const lendingServiceIncome = item.averageAum * lendingRatio * parameters.lendingServiceFee / 4;
+              
+              // 借贷利差收入 = 平均AUM * 借贷比例 * 借贷利差 / 4
+              const lendingSpreadIncome = item.averageAum * lendingRatio * parameters.lendingSpread / 4;
+              
+              // 季度总收入
+              const totalIncome = tokenizationIncome + managementIncome + transactionIncome + 
+                                  lendingServiceIncome + lendingSpreadIncome;
+              
+              return {
+                ...item,
+                tokenizationIncome,
+                managementIncome,
+                transactionIncome,
+                lendingServiceIncome,
+                lendingSpreadIncome,
+                totalIncome
+              };
+            });
+          };
+          
+          // 计算成本与利润预测
+          const calculateCostAndProfitForecast = (incomeForecast) => {
+            return incomeForecast.map(item => {
+              // 获取活跃的成本类别
+              const activeCostCategories = getActiveCostCategories();
+              
+              // 初始化成本对象
+              const costs = {};
+              let totalCost = 0;
+              
+              // 计算各类成本
+              activeCostCategories.forEach(category => {
+                const costData = getCostDataForCategory(category.id);
+                const cost = getCostForPeriod(costData, item.quarter);
+                costs[category.id] = cost;
+                totalCost += cost;
+              });
+              
+              // EBITDA计算
+              const ebitda = item.totalIncome - totalCost;
+              
+              // 折旧摊销
+              const depreciation = getDepreciation(item.quarter);
+              
+              // EBIT计算
+              const ebit = ebitda - depreciation;
+              
+              // 税费计算 (利润为正时才缴税)
+              const tax = ebit > 0 ? ebit * parameters.taxRate : 0;
+              
+              // 净利润
+              const netProfit = ebit - tax;
+              
+              // 利润率
+              const profitMargin = item.totalIncome !== 0 ? netProfit / item.totalIncome : 0;
+              
+              return {
+                ...item,
+                totalCost,
+                ebitda,
+                depreciation,
+                ebit,
+                tax,
+                netProfit,
+                profitMargin,
+                team: costs.team || 0,
+                tech: costs.tech || 0,
+                marketing: costs.marketing || 0,
+                legal: costs.legal || 0,
+                operation: costs.operation || 0,
+                custom1: costs.custom1 || 0,
+                custom2: costs.custom2 || 0,
+                custom3: costs.custom3 || 0
+              };
+            });
+          };
+          
+          // 获取特定季度的融资金额
+          const getFinancingAmount = (quarter) => {
+            const financing = parameters.financing.find(item => item.quarter === quarter);
+            return financing ? financing.amount : 0;
+          };
+          
+          // 计算现金流预测
+          const calculateCashFlowForecast = (profitForecast) => {
+            let cashBalance = parameters.initialFunding;
+            
+            return profitForecast.map(item => {
+              // 净利润
+              const { netProfit, depreciation } = item;
+              
+              // 加回折旧摊销
+              const depreciationAddBack = depreciation;
+              
+              // 营运资金变动 (简化假设为0)
+              const workingCapitalChange = 0;
+              
+              // 经营现金流
+              const operatingCashFlow = netProfit + depreciationAddBack + workingCapitalChange;
+              
+              // 融资现金流
+              const financingCashFlow = getFinancingAmount(item.quarter);
+              
+              // 季度净现金流
+              const netCashFlow = operatingCashFlow + financingCashFlow;
+              
+              // 更新现金余额
+              cashBalance += netCashFlow;
+              
+              return {
+                ...item,
+                netProfit,
+                depreciationAddBack,
+                workingCapitalChange,
+                operatingCashFlow,
+                financingCashFlow,
+                netCashFlow,
+                endingCash: cashBalance
+              };
+            });
+          };
+          
+          // 计算年度汇总数据
+          const calculateYearlySummary = (quarterlyData) => {
+            const years = [2025, 2026, 2027, 2028, 2029, 2030];
+            const yearlySummary = [];
+            
+            for (const year of years) {
+              // 过滤出该年的季度数据
+              const yearData = quarterlyData.filter(item => item.quarter.startsWith(year.toString()));
+              
+              if (yearData.length === 0) continue;
+              
+              // 汇总数据
+              const summary = {
+                year,
+                totalIncome: _.sumBy(yearData, 'totalIncome'),
+                totalCost: _.sumBy(yearData, 'totalCost'),
+                ebitda: _.sumBy(yearData, 'ebitda'),
+                depreciation: _.sumBy(yearData, 'depreciation'),
+                ebit: _.sumBy(yearData, 'ebit'),
+                tax: _.sumBy(yearData, 'tax'),
+                netProfit: _.sumBy(yearData, 'netProfit')
+              };
+              
+              // 计算年度利润率
+              summary.profitMargin = summary.totalIncome !== 0 ? summary.netProfit / summary.totalIncome : 0;
+              
+              yearlySummary.push(summary);
+            }
+            
+            return yearlySummary;
+          };
+          
+          // 计算财务指标
+          const calculateFinancialIndicators = (yearlySummary, quarterlyData) => {
+            const indicators = [];
+            
+            // 收入增长率
+            const revenueGrowth = yearlySummary.map((item, index) => {
+              if (index === 0) return { year: item.year, value: "-" }; // 第一年无增长率
+              const previousYear = yearlySummary[index - 1];
+              const growth = previousYear.totalIncome !== 0 ? 
+                (item.totalIncome / previousYear.totalIncome) - 1 : 0;
+              return { year: item.year, value: growth };
+            });
+            
+            // EBITDA利润率
+            const ebitdaMargin = yearlySummary.map(item => {
+              const margin = item.totalIncome !== 0 ? item.ebitda / item.totalIncome : 0;
+              return { year: item.year, value: margin };
+            });
+            
+            // 净利润率
+            const netProfitMargin = yearlySummary.map(item => {
+              const margin = item.totalIncome !== 0 ? item.netProfit / item.totalIncome : 0;
+              return { year: item.year, value: margin };
+            });
+            
+            // 现金流情况
+            const lastQuarterOfEachYear = [...quarterlyData].filter(
+              (item, index, array) => {
+                const year = item.quarter.substring(0, 4);
+                const nextItem = array[index + 1];
+                return !nextItem || nextItem.quarter.substring(0, 4) !== year;
+              }
+            );
+            
+            const cashBalance = lastQuarterOfEachYear.map(item => {
+              return { year: parseInt(item.quarter.substring(0, 4)), value: item.endingCash };
+            });
+            
+            indicators.push(
+              { name: "收入增长率", data: revenueGrowth },
+              { name: "EBITDA利润率", data: ebitdaMargin },
+              { name: "净利润率", data: netProfitMargin },
+              { name: "年末现金余额", data: cashBalance }
+            );
+            
+            return indicators;
+          };
+          
+          // 计算所有财务数据
+          const calculateFinancialData = () => {
+            const aumForecast = calculateAumForecast();
+            const incomeForecast = calculateIncomeForecast(aumForecast);
+            const profitForecast = calculateCostAndProfitForecast(incomeForecast);
+            const cashFlowForecast = calculateCashFlowForecast(profitForecast);
+            const yearlySummary = calculateYearlySummary(profitForecast);
+            const financialIndicators = calculateFinancialIndicators(yearlySummary, cashFlowForecast);
+            
+            return {
+              aumForecast,
+              incomeForecast,
+              profitForecast,
+              cashFlowForecast,
+              yearlySummary,
+              financialIndicators
+            };
+          };
+          
+          // 计算财务数据
+          const financialData = calculateFinancialData();
+          
+          // 处理参数更改
+          const handleParameterChange = (category, index, field, value) => {
+            const updatedParameters = { ...parameters };
+            
+            // 根据字段类型进行适当的转换
+            const parsedValue = typeof value === 'string' && !isNaN(Number(value)) ? 
+                                Number(value) : value;
+            
+            // 更新特定类别中的特定字段
+            if (Array.isArray(updatedParameters[category])) {
+              updatedParameters[category][index][field] = parsedValue;
+            } else {
+              updatedParameters[category] = parsedValue;
+            }
+            
+            setParameters(updatedParameters);
+          };
+          
+          // 格式化货币数字
+          const formatCurrency = (amount) => {
+            return new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+            }).format(amount);
+          };
+          
+          // 格式化百分比
+          const formatPercent = (value) => {
+            if (value === "-") return "-";
+            return new Intl.NumberFormat('en-US', {
+              style: 'percent',
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            }).format(value);
+          };
+          
+          // 参数选项卡组件
+          const ParametersTab = () => {
+            return (
+              <div className="p-4">
+                <h2 className="text-xl font-bold mb-4">假设与参数</h2>
+                
+                {/* 时间参数 */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-2">时间参数</h3>
+                  <div className="grid grid-cols-2 gap-4 mb-2">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">起始季度</label>
+                      <input 
+                        type="text" 
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                        value={parameters.startQuarter}
+                        onChange={(e) => handleParameterChange('startQuarter', null, null, e.target.value)}
+                      />
                     </div>
-                    
-                    <div className="mt-4 bg-gray-50 p-4 rounded-lg">
-                      <h3 className="font-medium mb-2">AUM增长预测</h3>
-                      <div className="overflow-x-auto">
-                        <table className="min-w-full bg-white border border-gray-300">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">预测期限</label>
+                      <input 
+                        type="text" 
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                        value={parameters.forecastPeriod}
+                        onChange={(e) => handleParameterChange('forecastPeriod', null, null, e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                {/* 初始资金 */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-2">初始资金情况</h3>
+                  <div className="w-1/2 mb-2">
+                    <label className="block text-sm font-medium text-gray-700">天使轮融资</label>
+                    <input 
+                      type="number" 
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                      value={parameters.initialFunding}
+                      onChange={(e) => handleParameterChange('initialFunding', null, null, Number(e.target.value))}
+                    />
+                  </div>
+                </div>
+                
+                {/* AUM增长预测 */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-2">管理资产规模(AUM)增长预测</h3>
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead>
+                      <tr>
+                        <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">时间段</th>
+                        <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AUM (美元)</th>
+                        <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">增长率</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {parameters.aumGrowth.map((item, index) => (
+                        <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                          <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">{item.period}</td>
+                          <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">
+                            <input 
+                              type="number" 
+                              className="w-full border border-gray-300 rounded-md shadow-sm p-1"
+                              value={item.aum}
+                              onChange={(e) => handleParameterChange('aumGrowth', index, 'aum', Number(e.target.value))}
+                            />
+                          </td>
+                          <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">
+                            <input 
+                              type="number" 
+                              className="w-full border border-gray-300 rounded-md shadow-sm p-1"
+                              value={item.growthRate}
+                              onChange={(e) => handleParameterChange('aumGrowth', index, 'growthRate', Number(e.target.value))}
+                              step="0.01"
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                
+                {/* 收入参数 */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-2">收入参数</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">通证化费率(平均)</label>
+                      <input 
+                        type="number" 
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                        value={parameters.tokenizationFee}
+                        onChange={(e) => handleParameterChange('tokenizationFee', null, null, Number(e.target.value))}
+                        step="0.001"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">按新增AUM计算</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">年管理费率</label>
+                      <input 
+                        type="number" 
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                        value={parameters.managementFee}
+                        onChange={(e) => handleParameterChange('managementFee', null, null, Number(e.target.value))}
+                        step="0.001"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">按平均AUM计算</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">交易费率</label>
+                      <input 
+                        type="number" 
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                        value={parameters.transactionFee}
+                        onChange={(e) => handleParameterChange('transactionFee', null, null, Number(e.target.value))}
+                        step="0.001"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">按交易量计算</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">年交易量占AUM比例</label>
+                      <input 
+                        type="number" 
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                        value={parameters.transactionVolume}
+                        onChange={(e) => handleParameterChange('transactionVolume', null, null, Number(e.target.value))}
+                        step="0.1"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">资产交易活跃度</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">借贷服务费率</label>
+                      <input 
+                        type="number" 
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                        value={parameters.lendingServiceFee}
+                        onChange={(e) => handleParameterChange('lendingServiceFee', null, null, Number(e.target.value))}
+                        step="0.001"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">按新增借贷金额计算</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">借贷利差</label>
+                      <input 
+                        type="number" 
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                        value={parameters.lendingSpread}
+                        onChange={(e) => handleParameterChange('lendingSpread', null, null, Number(e.target.value))}
+                        step="0.001"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">按平均借贷余额计算</p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* 借贷比例 */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-2">借贷规模占AUM比例</h3>
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead>
+                      <tr>
+                        <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">年份</th>
+                        <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">比例</th>
+                        <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">说明</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {parameters.lendingRatio.map((item, index) => (
+                        <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                          <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">{item.year}</td>
+                          <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">
+                            <input 
+                              type="number" 
+                              className="w-full border border-gray-300 rounded-md shadow-sm p-1"
+                              value={item.ratio}
+                              onChange={(e) => handleParameterChange('lendingRatio', index, 'ratio', Number(e.target.value))}
+                              step="0.01"
+                            />
+                          </td>
+                          <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">{item.note}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                
+                {/* 团队成本 */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-2">成本结构设置</h3>
+                  
+                  {/* 成本类别开关 */}
+                  <div className="mb-4">
+                    <h4 className="text-md font-medium mb-2">选择成本类别</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      {parameters.costCategories.map((category, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            id={`cost-category-${index}`}
+                            checked={category.isActive}
+                            onChange={() => handleCostCategoryToggle(index)}
+                            className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                          />
+                          <input
+                            type="text"
+                            value={category.name}
+                            onChange={(e) => handleCostCategoryNameChange(index, e.target.value)}
+                            className="flex-1 border border-gray-300 rounded-md shadow-sm p-1"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* 各类成本数据表 */}
+                  {getActiveCostCategories().map((category, categoryIndex) => {
+                    const costData = getCostDataForCategory(category.id);
+                    return (
+                      <div key={categoryIndex} className="mb-4">
+                        <h4 className="text-md font-medium mb-2">{category.name} (每季度)</h4>
+                        <table className="min-w-full divide-y divide-gray-200">
                           <thead>
-                            <tr className="bg-gray-100">
-                              <th className="px-4 py-2 border">期间</th>
-                              <th className="px-4 py-2 border">AUM目标</th>
-                              <th className="px-4 py-2 border">增长率</th>
+                            <tr>
+                              <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">时间段</th>
+                              <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">成本 (美元)</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {parameters.aumGrowth.map((item, index) => (
-                              <tr key={index}>
-                                <td className="px-4 py-2 border">{item.period}</td>
-                                <td className="px-4 py-2 border">
+                            {costData.map((item, index) => (
+                              <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">{item.period}</td>
+                                <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">
                                   <input 
                                     type="number" 
-                                    value={item.aum} 
-                                    className="w-full p-1 border rounded"
-                                    onChange={(e) => {
-                                      const newAumGrowth = [...parameters.aumGrowth];
-                                      newAumGrowth[index].aum = parseFloat(e.target.value);
-                                      setParameters({...parameters, aumGrowth: newAumGrowth});
-                                    }}
-                                  />
-                                </td>
-                                <td className="px-4 py-2 border">
-                                  <input 
-                                    type="number" 
-                                    value={item.growthRate}
-                                    step="0.1" 
-                                    className="w-full p-1 border rounded"
-                                    onChange={(e) => {
-                                      const newAumGrowth = [...parameters.aumGrowth];
-                                      newAumGrowth[index].growthRate = parseFloat(e.target.value);
-                                      setParameters({...parameters, aumGrowth: newAumGrowth});
-                                    }}
+                                    className="w-full border border-gray-300 rounded-md shadow-sm p-1"
+                                    value={item.cost}
+                                    onChange={(e) => handleParameterChange(category.id + 'Cost', index, 'cost', Number(e.target.value))}
                                   />
                                 </td>
                               </tr>
@@ -630,31 +899,456 @@
                           </tbody>
                         </table>
                       </div>
-                    </div>
-                    
-                    {/* 这里可以添加更多成本配置界面的代码 */}
+                    );
+                  })}
+                </div>
+                
+                {/* 折旧摊销 */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-2">折旧摊销 (每季度)</h3>
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead>
+                      <tr>
+                        <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">时间段</th>
+                        <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">金额 (美元)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {parameters.depreciation.map((item, index) => (
+                        <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                          <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">{item.period}</td>
+                          <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">
+                            <input 
+                              type="number" 
+                              className="w-full border border-gray-300 rounded-md shadow-sm p-1"
+                              value={item.value}
+                              onChange={(e) => handleParameterChange('depreciation', index, 'value', Number(e.target.value))}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                
+                {/* 融资计划 */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-2">融资现金流</h3>
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead>
+                      <tr>
+                        <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">季度</th>
+                        <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">融资金额 (美元)</th>
+                        <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">备注</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {parameters.financing.map((item, index) => (
+                        <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                          <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">{item.quarter}</td>
+                          <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">
+                            <input 
+                              type="number" 
+                              className="w-full border border-gray-300 rounded-md shadow-sm p-1"
+                              value={item.amount}
+                              onChange={(e) => handleParameterChange('financing', index, 'amount', Number(e.target.value))}
+                            />
+                          </td>
+                          <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">
+                            <input 
+                              type="text" 
+                              className="w-full border border-gray-300 rounded-md shadow-sm p-1"
+                              value={item.note}
+                              onChange={(e) => handleParameterChange('financing', index, 'note', e.target.value)}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                
+                {/* 税率设置 */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-2">税率设置</h3>
+                  <div className="w-1/3">
+                    <label className="block text-sm font-medium text-gray-700">企业所得税率</label>
+                    <input 
+                      type="number" 
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                      value={parameters.taxRate}
+                      onChange={(e) => handleParameterChange('taxRate', null, null, Number(e.target.value))}
+                      step="0.01"
+                    />
                   </div>
-                )}
+                </div>
+              </div>
+            );
+          };
+          
+          // AUM与收入预测选项卡
+          const AumIncomeTab = () => {
+            return (
+              <div className="p-4">
+                <h2 className="text-xl font-bold mb-4">AUM与收入预测</h2>
+                
+                {/* AUM预测表 */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold mb-2">季度AUM预测</h3>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead>
+                        <tr>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">季度</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">期初AUM</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">增长额</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">期末AUM</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">平均AUM</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {financialData.aumForecast.map((item, index) => (
+                          <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{item.quarter}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.beginningAum)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.growthAmount)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.endingAum)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.averageAum)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                {/* 收入预测表 */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">季度收入预测</h3>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead>
+                        <tr>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">季度</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">通证化费收入</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">管理费收入</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">交易费收入</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">借贷服务费</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">借贷利差收入</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">季度总收入</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {financialData.incomeForecast.map((item, index) => (
+                          <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{item.quarter}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.tokenizationIncome)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.managementIncome)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.transactionIncome)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.lendingServiceIncome)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.lendingSpreadIncome)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{formatCurrency(item.totalIncome)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            );
+          };
+          
+          // 成本与利润预测选项卡
+          const CostProfitTab = () => {
+            // 获取活跃的成本类别
+            const activeCategories = getActiveCostCategories();
+            
+            return (
+              <div className="p-4">
+                <h2 className="text-xl font-bold mb-4">成本与利润预测</h2>
+                
+                {/* 成本预测表 */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold mb-2">季度成本预测</h3>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead>
+                        <tr>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">季度</th>
+                          {activeCategories.map((category, index) => (
+                            <th key={index} className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{category.name}</th>
+                          ))}
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">季度总成本</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {financialData.profitForecast.map((item, index) => (
+                          <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{item.quarter}</td>
+                            {activeCategories.map((category, catIndex) => (
+                              <td key={catIndex} className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
+                                {formatCurrency(item[category.id])}
+                              </td>
+                            ))}
+                            <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{formatCurrency(item.totalCost)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                {/* 利润预测表 */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold mb-2">季度利润预测</h3>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead>
+                        <tr>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">季度</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">总收入</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">总成本</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EBITDA</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">折旧摊销</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EBIT</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">税费</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">净利润</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">利润率</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {financialData.profitForecast.map((item, index) => (
+                          <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{item.quarter}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.totalIncome)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.totalCost)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.ebitda)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.depreciation)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.ebit)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.tax)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{formatCurrency(item.netProfit)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{formatPercent(item.profitMargin)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                {/* 年度利润汇总 */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">年度利润汇总</h3>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead>
+                        <tr>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">年份</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">总收入</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">总成本</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EBITDA</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">折旧摊销</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EBIT</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">税费</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">净利润</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">利润率</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {financialData.yearlySummary.map((item, index) => (
+                          <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{item.year}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.totalIncome)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.totalCost)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.ebitda)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.depreciation)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.ebit)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.tax)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{formatCurrency(item.netProfit)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{formatPercent(item.profitMargin)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            );
+          };
+          
+          // 现金流预测选项卡
+          const CashFlowTab = () => {
+            return (
+              <div className="p-4">
+                <h2 className="text-xl font-bold mb-4">现金流预测</h2>
+                
+                {/* 现金流预测表 */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold mb-2">季度现金流预测</h3>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead>
+                        <tr>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">季度</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">净利润</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">折旧摊销加回</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">营运资金变动</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">经营现金流</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">融资现金流</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">季度净现金流</th>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">期末现金</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="bg-white">
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">初始现金</td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">-</td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">-</td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">-</td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">-</td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">-</td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">-</td>
+                          <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{formatCurrency(parameters.initialFunding)}</td>
+                        </tr>
+                        {financialData.cashFlowForecast.map((item, index) => (
+                          <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{item.quarter}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.netProfit)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.depreciationAddBack)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.workingCapitalChange)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.operatingCashFlow)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.financingCashFlow)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatCurrency(item.netCashFlow)}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{formatCurrency(item.endingCash)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            );
+          };
+          
+          // 财务指标选项卡
+          const FinancialIndicatorsTab = () => {
+            return (
+              <div className="p-4">
+                <h2 className="text-xl font-bold mb-4">财务指标与敏感性分析</h2>
+                
+                {/* 财务指标表 */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold mb-2">关键财务指标</h3>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead>
+                        <tr>
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">财务指标</th>
+                          {financialData.financialIndicators[0].data.map((item, index) => (
+                            <th key={index} className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{item.year}</th>
+                          ))}
+                          <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">5年平均</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {financialData.financialIndicators.map((indicator, index) => {
+                          // 计算5年平均值
+                          const numericValues = indicator.data
+                            .map(item => item.value)
+                            .filter(value => typeof value === 'number');
+                          
+                          const average = numericValues.length > 0 ? 
+                            numericValues.reduce((sum, value) => sum + value, 0) / numericValues.length : 0;
+                          
+                          return (
+                            <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                              <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{indicator.name}</td>
+                              {indicator.data.map((item, dataIndex) => (
+                                <td key={dataIndex} className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
+                                  {typeof item.value === 'number' ? 
+                                    (indicator.name.includes('现金') ? formatCurrency(item.value) : formatPercent(item.value)) : 
+                                    item.value}
+                                </td>
+                              ))}
+                              <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {indicator.name.includes('现金') ? formatCurrency(average) : formatPercent(average)}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            );
+          };
+          
+          // 选项卡组件
+          const TabNavigation = () => {
+            const tabs = [
+              "假设与参数",
+              "AUM与收入预测",
+              "成本与利润预测",
+              "现金流预测",
+              "财务指标"
+            ];
+            
+            return (
+              <div className="border-b border-gray-200">
+                <nav className="-mb-px flex">
+                  {tabs.map((tab, index) => (
+                    <button
+                      key={index}
+                      className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${
+                        activeTab === index
+                          ? 'border-blue-500 text-blue-600'
+                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      }`}
+                      onClick={() => setActiveTab(index)}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </nav>
+              </div>
+            );
+          };
+          
+          // 渲染当前选中的选项卡内容
+          const renderActiveTab = () => {
+            switch (activeTab) {
+              case 0:
+                return <ParametersTab />;
+              case 1:
+                return <AumIncomeTab />;
+              case 2:
+                return <CostProfitTab />;
+              case 3:
+                return <CashFlowTab />;
+              case 4:
+                return <FinancialIndicatorsTab />;
+              default:
+                return <ParametersTab />;
+            }
+          };
+          
+          return (
+            <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+              <div className="px-4 py-5 sm:px-6">
+                <h1 className="text-2xl font-bold text-gray-900">Ploutos Finance 5年财务预测模型</h1>
+                <p className="mt-1 text-sm text-gray-500">动态测算计算器</p>
+              </div>
+              
+              <TabNavigation />
+              
+              <div className="p-4">
+                {renderActiveTab()}
               </div>
             </div>
-          </div>
-        );
-      };
+          );
+        };
 
-      return (
-        <div className="min-h-screen bg-gray-100">
-          <FinancialModel />
-        </div>
-      );
-    };
-
-    // 渲染应用
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    );
-  </script>
+        // 渲染应用
+        ReactDOM.render(<FinancialModel />, document.getElementById('root'));
+    </script>
 </body>
 </html>
